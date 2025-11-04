@@ -1,45 +1,73 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
+    public static PlayerInput playerInput;
     [SerializeField] Rigidbody2D rb;
-    [SerializeField] PlayerInput playerInput;
     [SerializeField] Animator animator;
 
     [Header("Movement")]
     [SerializeField] float moveSpeed;
     [SerializeField] float jumpForce, jumpBufferTime, coyoteTime, acceleration, deceleration;
+    Vector2 moveInput;
+    bool facingRight = true;
 
-    [Header("Ground Detection")]
+    [Header("Jumping")]
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundCheckRadius;
     [SerializeField] LayerMask tilemapLayer;
     [SerializeField] bool isGrounded;
-
-    Vector2 moveInput;
     float jumpBufferCounter;
     float coyoteTimeCounter;
-    bool facingRight = true;
+
+    [Header("Dashing")]
+    [SerializeField] TrailRenderer trailRenderer;
+    [SerializeField] float dashPower, dashTime, dashCooldown;
+    bool canDash = true, isDashing = false, hasAirDashed = false;
 
     private void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+            playerInput = gameObject.GetComponent<PlayerInput>();
+        }
         else
             Destroy(this);
-
-        playerInput.actions["Move"].performed += ctx => moveInput = ctx.ReadValue<Vector2>();
-        playerInput.actions["Move"].canceled += ctx => moveInput = Vector2.zero;
-        playerInput.actions["Jump"].performed += ctx => jumpBufferCounter = jumpBufferTime;
     }
 
-    void OnEnable() => playerInput.actions.Enable();
-    void OnDisable() => playerInput.actions.Disable();
+    void OnEnable()
+    {
+        playerInput.actions["Jump"].performed += ctx => jumpBufferCounter = jumpBufferTime;
+        playerInput.actions["Dash"].performed += OnDash;
+    }
+
+    void OnDisable() 
+    {
+        playerInput.actions["Jump"].performed -= ctx => jumpBufferCounter = jumpBufferTime;
+        playerInput.actions["Dash"].performed -= OnDash;
+    }
+
+    private void OnDash(InputAction.CallbackContext context)
+    {
+        if (!canDash || isDashing) return;
+
+        if (isGrounded || !hasAirDashed)
+        {
+            StartCoroutine(Dash());
+            if (!isGrounded)
+                hasAirDashed = true;
+        }
+    }
 
     private void FixedUpdate()
     {
+        if (isDashing) return;
+
+        moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
         float targetVelocity = moveInput.x * moveSpeed;
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, tilemapLayer);
         animator.SetBool("Grounded", isGrounded);
@@ -54,6 +82,7 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
         {
             coyoteTimeCounter = coyoteTime;
+            hasAirDashed = false;
         }
         else
         {
@@ -85,6 +114,22 @@ public class PlayerController : MonoBehaviour
         Vector3 newScale = transform.localScale;
         newScale.x *= -1;
         transform.localScale = newScale;
+    }
+
+    private IEnumerator Dash() 
+    { 
+        canDash = false; 
+        isDashing = true; 
+        float originalGravity = rb.gravityScale; 
+        rb.gravityScale = 0; 
+        rb.linearVelocity = new Vector2(transform.localScale.x * dashPower, 0f); 
+        trailRenderer.emitting = true; 
+        yield return new WaitForSeconds(dashTime); 
+        trailRenderer.emitting = false; 
+        rb.gravityScale = originalGravity; 
+        isDashing = false; 
+        yield return new WaitForSeconds(dashCooldown); 
+        canDash = true; 
     }
 
     void OnDrawGizmos()
