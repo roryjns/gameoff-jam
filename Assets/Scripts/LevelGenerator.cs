@@ -5,7 +5,7 @@ public class LevelGenerator : MonoBehaviour
 {
     private List<GameObject> loadedChunks;
     public int NumChunksWide = 5;
-    public int NumChunksHeight = 5;
+    public int NumChunksHigh = 5;
     private GameObject[][] instantiatedChunks = new GameObject[][] { };
 
     void Awake()
@@ -25,17 +25,17 @@ public class LevelGenerator : MonoBehaviour
 
     void Generate()
     {
-        instantiatedChunks = new GameObject[NumChunksHeight][];
-        for (int y = 0; y < NumChunksHeight; y++)
+        instantiatedChunks = new GameObject[NumChunksHigh][];
+        for (int y = 0; y < NumChunksHigh; y++)
         {
-            for (int x = 0; x < NumChunksHeight; x++)
+            for (int x = 0; x < NumChunksWide; x++)
             {
                 SpawnChunk(new Vector2Int(x, y), new Vector2Int(16, 16));
             }
         }
-        for (int y = 0; y < NumChunksHeight; y++)
+        for (int y = 0; y < NumChunksHigh; y++)
         {
-            for (int x = 0; x < NumChunksHeight; x++)
+            for (int x = 0; x < NumChunksWide; x++)
             {
                 if (CanOpenBottomRight(x, y) && CanOpenBottomLeft(x + 1, y))
                 {
@@ -70,7 +70,7 @@ public class LevelGenerator : MonoBehaviour
 
     private bool ExistTile(int chunkX, int chunkY, int tileX, int tileY)
     {
-        if (chunkX >= NumChunksWide || chunkY >= NumChunksHeight)
+        if (chunkX >= NumChunksWide || chunkY >= NumChunksHigh)
         {
             return false;
         }
