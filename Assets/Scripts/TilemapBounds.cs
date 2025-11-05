@@ -1,5 +1,3 @@
-#if UNITY_EDITOR
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -9,8 +7,8 @@ public class TilemapBounds : MonoBehaviour
 {
     public Vector2Int minBounds = Vector2Int.zero;
     public Vector2Int maxBounds = new Vector2Int(15, 15);
-
     private Tilemap tilemap;
+#if UNITY_EDITOR
 
     void OnEnable() => tilemap = GetComponent<Tilemap>();
 
@@ -22,5 +20,5 @@ public class TilemapBounds : MonoBehaviour
                 tilemap.SetTile(pos, null);
         }
     }
-}
 #endif
+}

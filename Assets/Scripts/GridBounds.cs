@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+
 using UnityEngine;
 
 [ExecuteAlways]
@@ -11,7 +11,7 @@ public class GridBoundaryGizmo : MonoBehaviour
     public bool drawCenterCross = true;                  
 
     private Grid grid;
-
+#if UNITY_EDITOR
     void OnDrawGizmos()
     {
         if (grid == null)
@@ -44,5 +44,5 @@ public class GridBoundaryGizmo : MonoBehaviour
             Gizmos.DrawLine(center + Vector3.up * crossSize, center + Vector3.down * crossSize);
         }
     }
-}
 #endif
+}
