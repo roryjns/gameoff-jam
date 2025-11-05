@@ -1,15 +1,18 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
+using Unity.VisualScripting;
 public class LevelGenerator : MonoBehaviour
 {
+    public static LevelGenerator Instance = null;
     private List<GameObject> loadedChunks;
     public int NumChunksWide = 5;
     public int NumChunksHigh = 5;
-    private GameObject[][] instantiatedChunks = new GameObject[][] { };
+    private Chunk[][] instantiatedChunks = new Chunk[][] { };
 
     void Awake()
     {
+        Instance = this;
         loadedChunks = new List<GameObject>(Resources.LoadAll<GameObject>("Chunks"));
     }
 
@@ -25,7 +28,7 @@ public class LevelGenerator : MonoBehaviour
 
     void Generate()
     {
-        instantiatedChunks = new GameObject[NumChunksHigh][];
+        instantiatedChunks = new Chunk[NumChunksHigh][];
         for (int y = 0; y < NumChunksHigh; y++)
         {
             for (int x = 0; x < NumChunksWide; x++)
@@ -46,35 +49,32 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    private Tilemap GetTilemap(int x, int y)
-    {
-        return instantiatedChunks[y][x].GetComponentInChildren<Tilemap>();
-    }
-
     private void SetTile(int chunkX, int chunkY, int tileX, int tileY, TileBase tile)
     {
-        GetTilemap(chunkX, chunkY).SetTile(new Vector3Int(tileX, tileY), tile);
+        GetChunk(chunkX, chunkY).SetTile(new Vector3Int(tileX, tileY), tile);
     }
 
+    const int openingSize = 6;
     private void OpenBottomLeft(int x, int y)
     {
-        SetTile(x, y, 0, 1, null);
-        SetTile(x, y, 0, 2, null);
+        for (int i = 1; i < openingSize; i++)
+        {
+            SetTile(x, y, 0, i, null);
+        }
     }
 
     private void OpenBottomRight(int x, int y)
     {
-        SetTile(x, y, 15, 1, null);
-        SetTile(x, y, 15, 2, null);
+        for (int i = 1; i < openingSize; i++)
+        {
+            SetTile(x, y, 15, i, null);
+        }
     }
 
     private bool ExistTile(int chunkX, int chunkY, int tileX, int tileY)
     {
-        if (chunkX >= NumChunksWide || chunkY >= NumChunksHigh)
-        {
-            return false;
-        }
-        return GetTilemap(chunkX, chunkY).GetTile(new Vector3Int(tileX, tileY));
+        Chunk chunk = GetChunk(chunkX, chunkY);
+        return chunk != null && chunk.ExistTile(tileX, tileY);
     }
 
     private bool CanOpenBottomLeft(int x, int y)
@@ -96,17 +96,42 @@ public class LevelGenerator : MonoBehaviour
 
     public GameObject SpawnChunk(Vector2Int gridPos, Vector2Int gridChunkSize)
     {
-        var chunk = GetRandomChunk();
-        if (chunk == null) return null;
+        var toInstantiate = GetRandomChunk();
+        if (toInstantiate == null) return null;
 
         Vector3 pos = new Vector3(gridPos.x * gridChunkSize.x, -gridPos.y * gridChunkSize.y, 0);
-        GameObject obj = Instantiate(chunk, pos, Quaternion.identity, transform);
+        GameObject obj = Instantiate(toInstantiate, pos, Quaternion.identity, transform);
+        Chunk chunk = obj.AddComponent<Chunk>();
+        chunk.X = gridPos.x;
+        chunk.Y = gridPos.y;
         if (instantiatedChunks[gridPos.y] == null)
         {
-            instantiatedChunks[gridPos.y] = new GameObject[NumChunksWide];
+            instantiatedChunks[gridPos.y] = new Chunk[NumChunksWide];
         }
-        instantiatedChunks[gridPos.y][gridPos.x] = obj;
+        instantiatedChunks[gridPos.y][gridPos.x] = chunk;
         obj.name = gridPos.ToString();
         return obj;
+    }
+
+    internal bool CanChunkOpenTopLeft(Chunk chunk)
+    {
+        Chunk other = GetChunk(chunk.X, chunk.Y - 1);
+        if (other == null) return false;
+        return chunk.CanOpenTopLeftRoof() && other.CanOpenBottomLeftFloor();
+    }
+
+    private Chunk GetChunk(int x, int y)
+    {
+        if (x >= NumChunksWide || y >= NumChunksHigh || y < 0 || x < 0)
+        {
+            return null;
+        }
+        return instantiatedChunks[y][x];
+    }
+
+    internal void OpenTopLeftRoof(Chunk chunk)
+    {
+        chunk.OpenTopLeftRoof();
+        GetChunk(chunk.X, chunk.Y - 1).OpenBottomLeftFloor();
     }
 }
