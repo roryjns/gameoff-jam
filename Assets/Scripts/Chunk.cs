@@ -8,7 +8,7 @@ public class Chunk : MonoBehaviour
     internal int Y;
 
     Tilemap tilemap = null;
-    private Tilemap GetTilemap()
+    public Tilemap GetTilemap()
     {
         if (tilemap == null)
         {

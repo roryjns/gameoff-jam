@@ -7,8 +7,8 @@ public class LevelGenerator : MonoBehaviour
     public static LevelGenerator Instance = null;
     private List<GameObject> loadedChunks;
     public int NumChunksWide = 5;
-    public int NumChunksHigh = 5;
-    private Chunk[][] instantiatedChunks = new Chunk[][] { };
+    public int NumChunksHigh = 3;
+    public Chunk[][] InstantiatedChunks = new Chunk[][] { };
 
     void Awake()
     {
@@ -28,7 +28,7 @@ public class LevelGenerator : MonoBehaviour
 
     void Generate()
     {
-        instantiatedChunks = new Chunk[NumChunksHigh][];
+        InstantiatedChunks = new Chunk[NumChunksHigh][];
         for (int y = 0; y < NumChunksHigh; y++)
         {
             for (int x = 0; x < NumChunksWide; x++)
@@ -54,7 +54,7 @@ public class LevelGenerator : MonoBehaviour
         GetChunk(chunkX, chunkY).SetTile(new Vector3Int(tileX, tileY), tile);
     }
 
-    const int openingSize = 6;
+    const int openingSize = 7;
     private void OpenBottomLeft(int x, int y)
     {
         for (int i = 1; i < openingSize; i++)
@@ -87,14 +87,14 @@ public class LevelGenerator : MonoBehaviour
         return ExistTile(x, y, 15, 1) && !ExistTile(x, y, 14, 1);
     }
 
-    public GameObject GetRandomChunk()
+    private GameObject GetRandomChunk()
     {
         if (loadedChunks.Count == 0) return null;
         int index = Random.Range(0, loadedChunks.Count);
         return loadedChunks[index];
     }
 
-    public GameObject SpawnChunk(Vector2Int gridPos, Vector2Int gridChunkSize)
+    private GameObject SpawnChunk(Vector2Int gridPos, Vector2Int gridChunkSize)
     {
         var toInstantiate = GetRandomChunk();
         if (toInstantiate == null) return null;
@@ -104,11 +104,11 @@ public class LevelGenerator : MonoBehaviour
         Chunk chunk = obj.AddComponent<Chunk>();
         chunk.X = gridPos.x;
         chunk.Y = gridPos.y;
-        if (instantiatedChunks[gridPos.y] == null)
+        if (InstantiatedChunks[gridPos.y] == null)
         {
-            instantiatedChunks[gridPos.y] = new Chunk[NumChunksWide];
+            InstantiatedChunks[gridPos.y] = new Chunk[NumChunksWide];
         }
-        instantiatedChunks[gridPos.y][gridPos.x] = chunk;
+        InstantiatedChunks[gridPos.y][gridPos.x] = chunk;
         obj.name = gridPos.ToString();
         return obj;
     }
@@ -120,18 +120,27 @@ public class LevelGenerator : MonoBehaviour
         return chunk.CanOpenTopLeftRoof() && other.CanOpenBottomLeftFloor();
     }
 
-    private Chunk GetChunk(int x, int y)
+    public Chunk GetChunk(int x, int y)
     {
         if (x >= NumChunksWide || y >= NumChunksHigh || y < 0 || x < 0)
         {
             return null;
         }
-        return instantiatedChunks[y][x];
+        return InstantiatedChunks[y][x];
     }
 
     internal void OpenTopLeftRoof(Chunk chunk)
     {
         chunk.OpenTopLeftRoof();
         GetChunk(chunk.X, chunk.Y - 1).OpenBottomLeftFloor();
+    }
+
+    internal Chunk GetChunkFromPosition(Vector3 position)
+    {
+        Tilemap tilemap = GetChunk(0, 0).GetTilemap();
+        var cellPos = transform.position - new Vector3(position.x * tilemap.cellSize.x, position.y * tilemap.cellSize.y);
+        int x = (int)-Mathf.Floor(cellPos.x) / 16;
+        int y = (int)Mathf.Floor(cellPos.y + 16) / 16;
+        return GetChunk(x,y);
     }
 }

@@ -24,14 +24,14 @@ public class ChunkRequirements : ScriptableObject, IRequirement
     {
         switch (Type)
         {
-            case 1: // Chunk can open top left ceiling;
+            case 1: // Open top left ceiling;
                 Chunk chunk = GetChunk(gameObject);
                 LevelGenerator.Instance.OpenTopLeftRoof(chunk);
                 break;
 
         }
-
     }
+
     public Chunk GetChunk(GameObject gameObject)
     {
         Transform tr = gameObject.transform;
