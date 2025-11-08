@@ -1,14 +1,17 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Tilemaps;
-using Unity.VisualScripting;
 public class LevelGenerator : MonoBehaviour
 {
     public static LevelGenerator Instance = null;
     private List<GameObject> loadedChunks;
+    public RuleTile RuleTile;
     public int NumChunksWide = 5;
     public int NumChunksHigh = 3;
+    public int ChunkWidth = 16;
+    public int ChunkHeight = 16;
     public Chunk[][] InstantiatedChunks = new Chunk[][] { };
+    internal Tilemap Tilemap = null;
 
     void Awake()
     {
@@ -21,21 +24,55 @@ public class LevelGenerator : MonoBehaviour
         Generate();
     }
 
-    void Update()
-    {
-
-    }
-
     void Generate()
     {
         InstantiatedChunks = new Chunk[NumChunksHigh][];
+        if (Tilemap != null)
+        {
+            Tilemap.ClearAllTiles();
+        }
+        else
+        {
+            Tilemap = GetComponent<Tilemap>();
+        }
+        TileBase[] tiles = new TileBase[ChunkWidth * ChunkHeight];
+        Vector3Int[] positions = new Vector3Int[ChunkWidth * ChunkHeight];
+
         for (int y = 0; y < NumChunksHigh; y++)
         {
             for (int x = 0; x < NumChunksWide; x++)
             {
-                SpawnChunk(new Vector2Int(x, y), new Vector2Int(16, 16));
+                var tilemap = SpawnChunk(new Vector2Int(x, y), new Vector2Int(16, 16), tiles, positions);
             }
         }
+        for (int yChunk = 0; yChunk < NumChunksHigh; yChunk++)
+        {
+            for (int x = 0; x < ChunkWidth; x++)
+            {
+                for (int y = 0; y < ChunkHeight; y++)
+                {
+                    SetTile(0, yChunk, -1 - x, y, RuleTile);
+                    SetTile(NumChunksWide, yChunk, x, y, RuleTile);
+                }
+            }
+        }
+        for (int xChunk = -1; xChunk <= NumChunksWide; xChunk++)
+        {
+            for (int x = 0; x < ChunkWidth; x++)
+            {
+                for (int y = 0; y < ChunkHeight; y++)
+                {
+                    SetTile(xChunk, NumChunksHigh, x, y, RuleTile);
+                }
+            }
+        }
+        //for (int x = 0; x < NumChunksWide; x++)
+        //{
+        //    for (int i = 0; i < ChunkHeight; i++)
+        //    {
+        //        SetTile(x, NumChunksHigh, i, 0, RuleTile);
+        //    }
+        //}
         for (int y = 0; y < NumChunksHigh; y++)
         {
             for (int x = 0; x < NumChunksWide; x++)
@@ -49,9 +86,9 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    private void SetTile(int chunkX, int chunkY, int tileX, int tileY, TileBase tile)
+    public void SetTile(int chunkX, int chunkY, int tileX, int tileY, TileBase tile)
     {
-        GetChunk(chunkX, chunkY).SetTile(new Vector3Int(tileX, tileY), tile);
+        Tilemap.SetTile(new Vector3Int(chunkX * ChunkWidth + tileX, -chunkY * ChunkHeight + tileY), tile);
     }
 
     const int openingSize = 7;
@@ -71,32 +108,26 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    private bool ExistTile(int chunkX, int chunkY, int tileX, int tileY)
+    internal bool ExistsTile(int chunkX, int chunkY, int tileX, int tileY)
     {
-        Chunk chunk = GetChunk(chunkX, chunkY);
-        return chunk != null && chunk.ExistTile(tileX, tileY);
+        return Tilemap.GetTile(new Vector3Int(chunkX * ChunkWidth + tileX, -chunkY * ChunkHeight + tileY)) != null;
     }
 
     private bool CanOpenBottomLeft(int x, int y)
     {
-        return ExistTile(x, y, 0, 1) && !ExistTile(x, y, 1, 1);
+        return ExistsTile(x, y, 0, 1) && !ExistsTile(x, y, 1, 1);
     }
 
     private bool CanOpenBottomRight(int x, int y)
     {
-        return ExistTile(x, y, 15, 1) && !ExistTile(x, y, 14, 1);
+        return ExistsTile(x, y, 15, 1) && !ExistsTile(x, y, 14, 1);
     }
 
-    private GameObject GetRandomChunk()
+    private GameObject SpawnChunk(Vector2Int gridPos, Vector2Int gridChunkSize, TileBase[] tiles, Vector3Int[] positions)
     {
         if (loadedChunks.Count == 0) return null;
         int index = Random.Range(0, loadedChunks.Count);
-        return loadedChunks[index];
-    }
-
-    private GameObject SpawnChunk(Vector2Int gridPos, Vector2Int gridChunkSize)
-    {
-        var toInstantiate = GetRandomChunk();
+        var toInstantiate = loadedChunks[index];
         if (toInstantiate == null) return null;
 
         Vector3 pos = new Vector3(gridPos.x * gridChunkSize.x, -gridPos.y * gridChunkSize.y, 0);
@@ -110,6 +141,18 @@ public class LevelGenerator : MonoBehaviour
         }
         InstantiatedChunks[gridPos.y][gridPos.x] = chunk;
         obj.name = gridPos.ToString();
+
+        var oldTilemap = obj.GetComponentInChildren<Tilemap>();
+        int count = oldTilemap.GetTilesRangeNonAlloc(new Vector3Int(-424242, -424242), new Vector3Int(42424242, 4242424), positions, tiles);
+
+        Vector3Int offset = new Vector3Int(gridPos.x * ChunkWidth, -gridPos.y * ChunkHeight, 0);
+
+        for (int i = 0; i < count; i++)
+        {
+            Tilemap.SetTile(positions[i] + offset, tiles[i]);
+        }
+
+        Destroy(oldTilemap.gameObject);
         return obj;
     }
 
@@ -137,10 +180,9 @@ public class LevelGenerator : MonoBehaviour
 
     internal Chunk GetChunkFromPosition(Vector3 position)
     {
-        Tilemap tilemap = GetChunk(0, 0).GetTilemap();
-        var cellPos = transform.position - new Vector3(position.x * tilemap.cellSize.x, position.y * tilemap.cellSize.y);
+        Vector3 cellPos = transform.position - new Vector3(position.x, position.y);
         int x = (int)-Mathf.Floor(cellPos.x) / 16;
         int y = (int)Mathf.Floor(cellPos.y + 16) / 16;
-        return GetChunk(x,y);
+        return GetChunk(x, y);
     }
 }

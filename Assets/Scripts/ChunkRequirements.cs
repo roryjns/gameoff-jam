@@ -14,7 +14,8 @@ public class ChunkRequirements : ScriptableObject, IRequirement
                 return true;
             case 1: // Chunk can open top left ceiling;
                 Chunk chunk = GetChunk(gameObject);
-                return LevelGenerator.Instance.CanChunkOpenTopLeft(chunk);
+                bool can = LevelGenerator.Instance.CanChunkOpenTopLeft(chunk);
+                return can;
         }
         Debug.LogWarning($"Requirement at {gameObject.GetFullPath()}/{name} is configured with a wrong number");
         return false;

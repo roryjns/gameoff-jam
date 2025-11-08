@@ -7,18 +7,9 @@ public class Chunk : MonoBehaviour
     internal int X;
     internal int Y;
 
-    Tilemap tilemap = null;
-    public Tilemap GetTilemap()
-    {
-        if (tilemap == null)
-        {
-            tilemap = GetComponentInChildren<Tilemap>();
-        }
-        return tilemap;
-    }
     public bool ExistTile(int tileX, int tileY)
     {
-        return GetTilemap().GetTile(new Vector3Int(tileX, tileY)) != null;
+        return LevelGenerator.Instance.ExistsTile(X, Y, tileX, tileY);
     }
 
     public bool CanOpenBottomLeft(int x, int y)
@@ -38,12 +29,7 @@ public class Chunk : MonoBehaviour
 
     internal bool CanOpenBottomLeftFloor()
     {
-        return ExistTile(1, 0) && !ExistTile(1, 1);
-    }
-
-    internal void SetTile(Vector3Int pos, TileBase tile)
-    {
-        GetTilemap().SetTile(pos, tile);
+        return ExistTile(1, 0) && !ExistTile(1, 1) && (X != 0 || Y != 0);
     }
 
     const int openingSize = 7;
@@ -52,7 +38,7 @@ public class Chunk : MonoBehaviour
     {
         for (int i = 1; i < openingSize; i++)
         {
-            SetTile(new Vector3Int(i, 15), null);
+            LevelGenerator.Instance.SetTile(X, Y, i, 15, null);
         }
     }
 
@@ -60,7 +46,7 @@ public class Chunk : MonoBehaviour
     {
         for (int i = 1; i < openingSize; i++)
         {
-            SetTile(new Vector3Int(i, 0), null);
+            LevelGenerator.Instance.SetTile(X, Y, i, 0, null);
         }
     }
 }

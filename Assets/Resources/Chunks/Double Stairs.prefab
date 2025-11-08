@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4134140651115509027}
   - component: {fileID: 1522562379069228741}
   m_Layer: 0
-  m_Name: LChunk
+  m_Name: Double Stairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1628,7 +1628,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4428dca688474a49b60b1087c9a7595, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  SpawnChanceOfAll: 72.8
+  SpawnChanceOfAll: 50
   requirements:
   - {fileID: 11400000, guid: 4d89530d27ed7c044bfa701ca465e455, type: 2}
   RandomSelectItems: 1
