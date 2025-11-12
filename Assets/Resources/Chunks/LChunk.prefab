@@ -1733,6 +1733,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   SpawnChanceOfAll: 72.8
+  SpawnAfterWaveCrashes: 0
   requirements:
   - {fileID: 11400000, guid: 612fe44b0a3ba3848a407949facb9e69, type: 2}
   - {fileID: 11400000, guid: 4d89530d27ed7c044bfa701ca465e455, type: 2}
@@ -1875,6 +1876,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
   SpawnChanceOfAll: 66.7
+  SpawnAfterWaveCrashes: 0
   requirements:
   - {fileID: 11400000, guid: 612fe44b0a3ba3848a407949facb9e69, type: 2}
   RandomSelectItems: 1

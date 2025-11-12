@@ -8,6 +8,7 @@ public class Spawner : MonoBehaviour
 {
     [Range(0f, 100f)]
     public float SpawnChanceOfAll = 100;
+    public bool SpawnAfterWaveCrashes = false;
     [Tooltip("Requirements that must be met to spawn this. Look in Prefabs/LevelRequirements for all of them")]
     public ScriptableObject[] requirements;
     [Header("Per item configuration")]
@@ -17,6 +18,17 @@ public class Spawner : MonoBehaviour
     public int MaxSpawnCount = 99;
     //public int MinSpawnCount = 99;
     private void Start()
+    {
+        if (SpawnAfterWaveCrashes)
+        {
+            Chunk chunk = Chunk.GetChunkFromGameObject(gameObject);
+            chunk.spawnersToSpawnAfterCrash.Add(this);
+            return;
+        }
+        TrySpawn();
+    }
+
+    public void TrySpawn()
     {
         foreach (var req in requirements)
         {
@@ -62,7 +74,7 @@ public class Spawner : MonoBehaviour
         foreach (var req in requirements)
         {
             if (req == null || req is not IRequirement) continue;
-            if (req is IRequirement r )
+            if (req is IRequirement r)
             {
                 r.OnSpawned(gameObject);
             }
