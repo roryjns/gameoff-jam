@@ -123,13 +123,14 @@ public class PlayerController : MonoBehaviour
         float originalGravity = rb.gravityScale; 
         rb.gravityScale = 0; 
         rb.linearVelocity = new Vector2(transform.localScale.x * dashPower, 0f); 
-        trailRenderer.emitting = true; 
+        trailRenderer.emitting = true;
+        SoundManager.PlaySound(SoundManager.SoundType.DASH);
         yield return new WaitForSeconds(dashTime); 
         trailRenderer.emitting = false; 
         rb.gravityScale = originalGravity; 
         isDashing = false; 
         yield return new WaitForSeconds(dashCooldown); 
-        canDash = true; 
+        canDash = true;
     }
 
     void OnDrawGizmos()
