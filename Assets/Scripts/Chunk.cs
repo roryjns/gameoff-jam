@@ -1,11 +1,12 @@
 using System;
+using UnityEditor.U2D.Aseprite;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class Chunk : MonoBehaviour
 {
     internal int X;
     internal int Y;
+    public ChunkType Type;
 
     public bool ExistTile(int tileX, int tileY)
     {
@@ -49,4 +50,10 @@ public class Chunk : MonoBehaviour
             LevelGenerator.Instance.SetTile(X, Y, i, 0, null);
         }
     }
+}
+
+public enum ChunkType
+{
+    Traversal,
+    Fight,
 }

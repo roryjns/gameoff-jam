@@ -3,19 +3,26 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ChunkRequirement")]
 public class ChunkRequirements : ScriptableObject, IRequirement
 {
-    public int Type = 0;
+    public ChunkRequirementType Type = 0;
 
     public bool IsMet(GameObject gameObject)
     {
         switch (Type)
         {
-            case 0:
+            case ChunkRequirementType.EMPTY_SELECTONEBELOW_:
                 Debug.LogWarning($"Requirement at {gameObject.GetFullPath()}/{name} is set to 0 (Empty, does nothing)");
                 return true;
-            case 1: // Chunk can open top left ceiling;
-                Chunk chunk = GetChunk(gameObject);
-                bool can = LevelGenerator.Instance.CanChunkOpenTopLeft(chunk);
-                return can;
+            case ChunkRequirementType.ChunkCanOpenTopLeftCeiling:
+                {
+                    Chunk chunk = GetChunk(gameObject);
+                    bool can = LevelGenerator.Instance.CanChunkOpenTopLeft(chunk);
+                    return can;
+                }
+            case ChunkRequirementType.IsNotStartOfLevel:
+                {
+                    Chunk chunk = GetChunk(gameObject);
+                    return chunk.X != 0 || chunk.Y != 0;
+                }
         }
         Debug.LogWarning($"Requirement at {gameObject.GetFullPath()}/{name} is configured with a wrong number");
         return false;
@@ -25,11 +32,10 @@ public class ChunkRequirements : ScriptableObject, IRequirement
     {
         switch (Type)
         {
-            case 1: // Open top left ceiling;
+            case ChunkRequirementType.ChunkCanOpenTopLeftCeiling: // Open top left ceiling;
                 Chunk chunk = GetChunk(gameObject);
                 LevelGenerator.Instance.OpenTopLeftRoof(chunk);
                 break;
-
         }
     }
 
@@ -46,6 +52,13 @@ public class ChunkRequirements : ScriptableObject, IRequirement
             tr = tr.parent;
         }
     }
+}
+
+public enum ChunkRequirementType
+{
+    EMPTY_SELECTONEBELOW_,
+    ChunkCanOpenTopLeftCeiling,
+    IsNotStartOfLevel,
 }
 
 public interface IRequirement

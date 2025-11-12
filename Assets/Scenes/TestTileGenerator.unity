@@ -1304,9 +1304,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0
-    width: 1
-    height: 1
+    y: 0.055555556
+    width: 0.33333334
+    height: 0.3333333
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -1380,6 +1380,7 @@ MonoBehaviour:
   NumChunksHigh: 3
   ChunkWidth: 16
   ChunkHeight: 16
+  pattern: 3
 --- !u!4 &2139656579
 Transform:
   m_ObjectHideFlags: 0

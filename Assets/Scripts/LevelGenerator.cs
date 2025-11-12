@@ -12,6 +12,7 @@ public class LevelGenerator : MonoBehaviour
     public int ChunkHeight = 16;
     public Chunk[][] InstantiatedChunks = new Chunk[][] { };
     internal Tilemap Tilemap = null;
+    public LevelPattern pattern = LevelPattern.Random;
 
     void Awake()
     {
@@ -42,7 +43,24 @@ public class LevelGenerator : MonoBehaviour
         {
             for (int x = 0; x < NumChunksWide; x++)
             {
-                var tilemap = SpawnChunk(new Vector2Int(x, y), new Vector2Int(16, 16), tiles, positions);
+                ChunkType? chunkType = null;
+                switch (pattern)
+                {
+                    case LevelPattern.Random:
+                        break;
+                    case LevelPattern.EnemiesEveryOtherColumn:
+                        chunkType = (x % 2 == 0) ? ChunkType.Traversal : ChunkType.Fight;
+                        break;
+                    case LevelPattern.EnemiesEveryOtherRow:
+                        chunkType = (y % 2 == 0) ? ChunkType.Traversal : ChunkType.Fight;
+                        break;
+                    case LevelPattern.CheckeredEnemies:
+                        chunkType = ((x + y) % 2 == 0) ? ChunkType.Traversal : ChunkType.Fight;
+                        break;
+                    default:
+                        break;
+                }
+                var tilemap = SpawnChunk(new Vector2Int(x, y), new Vector2Int(16, 16), tiles, positions, chunkType);
             }
         }
         for (int yChunk = 0; yChunk < NumChunksHigh; yChunk++)
@@ -123,7 +141,7 @@ public class LevelGenerator : MonoBehaviour
         return ExistsTile(x, y, 15, 1) && !ExistsTile(x, y, 14, 1);
     }
 
-    private GameObject SpawnChunk(Vector2Int gridPos, Vector2Int gridChunkSize, TileBase[] tiles, Vector3Int[] positions)
+    private GameObject SpawnChunk(Vector2Int gridPos, Vector2Int gridChunkSize, TileBase[] tiles, Vector3Int[] positions, ChunkType? chunkType)
     {
         if (loadedChunks.Count == 0) return null;
         int index = Random.Range(0, loadedChunks.Count);
@@ -132,8 +150,18 @@ public class LevelGenerator : MonoBehaviour
 
         Vector3 pos = new Vector3(gridPos.x * gridChunkSize.x, -gridPos.y * gridChunkSize.y, 0);
         GameObject obj = Instantiate(toInstantiate, pos, Quaternion.identity, transform);
-        Chunk chunk = obj.AddComponent<Chunk>();
-        chunk.X = gridPos.x;
+        Chunk chunk = obj.GetComponent<Chunk>();
+
+        if (chunk == null)
+        {
+            chunk = obj.AddComponent<Chunk>();
+        } 
+        else if (chunkType.HasValue && chunk.Type != chunkType.Value)
+        {
+            Destroy(obj);
+            return SpawnChunk(gridPos, gridChunkSize, tiles, positions, chunkType);
+        }
+            chunk.X = gridPos.x;
         chunk.Y = gridPos.y;
         if (InstantiatedChunks[gridPos.y] == null)
         {
@@ -185,4 +213,11 @@ public class LevelGenerator : MonoBehaviour
         int y = (int)Mathf.Floor(cellPos.y + 16) / 16;
         return GetChunk(x, y);
     }
+}
+public enum LevelPattern
+{
+    Random,
+    EnemiesEveryOtherColumn,
+    EnemiesEveryOtherRow,
+    CheckeredEnemies,
 }
