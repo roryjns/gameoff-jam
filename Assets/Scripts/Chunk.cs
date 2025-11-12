@@ -1,11 +1,14 @@
 using System;
+using System.Collections.Generic;
+using UnityEditor.U2D.Aseprite;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class Chunk : MonoBehaviour
 {
     internal int X;
     internal int Y;
+    internal List<Spawner> spawnersToSpawnAfterCrash = new ();
+    public ChunkType Type;
 
     public bool ExistTile(int tileX, int tileY)
     {
@@ -49,4 +52,31 @@ public class Chunk : MonoBehaviour
             LevelGenerator.Instance.SetTile(X, Y, i, 0, null);
         }
     }
+    public static Chunk GetChunkFromGameObject(GameObject gameObject)
+    {
+        Transform tr = gameObject.transform;
+        while (true)
+        {
+            Chunk chunk = tr.GetComponentInParent<Chunk>();
+            if (chunk != null)
+            {
+                return chunk;
+            }
+            tr = tr.parent;
+        }
+    }
+
+    public void OnCrash()
+    {
+        foreach (Spawner spawner in spawnersToSpawnAfterCrash)
+        {
+            spawner.TrySpawn();
+        }
+    }
+}
+
+public enum ChunkType
+{
+    Traversal,
+    Fight,
 }
