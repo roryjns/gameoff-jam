@@ -386,8 +386,8 @@ Camera:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1
-    height: 1
+    width: 0
+    height: 0
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -1586,7 +1586,7 @@ GameObject:
   - component: {fileID: 1255028969}
   - component: {fileID: 1255028970}
   m_Layer: 0
-  m_Name: WaveRise
+  m_Name: Wave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1601,7 +1601,7 @@ Transform:
   m_GameObject: {fileID: 1255028965}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -7.5, z: 11}
+  m_LocalPosition: {x: 0, y: -7, z: 11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1619,15 +1619,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77162b5a35065d74ca18da6979fc48d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveSimulator
-  segments: 50
+  segments: 15
   width: 20
-  height: 21
+  height: 25
   amplitude: 0.6
   waveDuration: 15
-  dormantDuration: 1
-  heightIncrease: 20
-  flattenAmount: 0.8
-  verticalSpeed:
+  targetHeight: 20
+  flattenAmount: 0.7
+  waveSpeed:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -1640,8 +1639,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.8
-      value: 0.8
+      time: 0.7268524
+      value: 0.9343529
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1649,8 +1648,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 1
-      value: 0
+      time: 0.9700001
+      value: 0.016175091
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -2157,7 +2156,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 95108a9ff05b86240a4f794b0d1d71c7, type: 3}
+  m_Resource: {fileID: 8300000, guid: 0ac5117e847ba3347a4d1853d649061f, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.448
   m_Pitch: 1
@@ -2338,10 +2337,10 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 219680531}
   - {fileID: 619394802}
-  - {fileID: 1983112297}
   - {fileID: 1704825573}
   - {fileID: 1763374766}
   - {fileID: 627700648}
   - {fileID: 369565290663757083}
   - {fileID: 1762501533}
   - {fileID: 395270858}
+  - {fileID: 1983112297}
