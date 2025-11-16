@@ -284,7 +284,7 @@ MonoBehaviour:
   seed: 1
   amplitudeMultiplier: 0
   cam: {fileID: 219680531}
-  parallaxEffect: 0.3
+  parallaxEffect: 0.5
 --- !u!33 &56589794
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -933,7 +933,7 @@ Camera:
     x: 0
     y: 0
     width: 1
-    height: 0.9996547
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -1051,7 +1051,7 @@ Transform:
   m_GameObject: {fileID: 559377793}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: 0.8, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1386,8 +1386,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.12588944, y: -0.11072457}
-  m_Size: {x: 0.35710284, y: 1.3525655}
+  m_Offset: {x: 0, y: 0.68}
+  m_Size: {x: 0.35, y: 1.35}
   m_Direction: 0
 --- !u!50 &627700651
 Rigidbody2D:
@@ -1475,7 +1475,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 95108a9ff05b86240a4f794b0d1d71c7, type: 3}
+  m_Resource: {fileID: 8300000, guid: 272d1658e5cdb364389614310ee588fa, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.5
   m_Pitch: 1
@@ -1699,7 +1699,7 @@ Transform:
   m_GameObject: {fileID: 879831455}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.15, y: -0.8, z: 0}
+  m_LocalPosition: {x: 0.1, y: 0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1818,7 +1818,7 @@ MonoBehaviour:
   seed: 2
   amplitudeMultiplier: 0
   cam: {fileID: 219680531}
-  parallaxEffect: 0.08
+  parallaxEffect: 0.2
 --- !u!33 &923665576
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3355,7 +3355,7 @@ Transform:
   m_GameObject: {fileID: 1255028965}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 11}
+  m_LocalPosition: {x: 0, y: 1, z: 12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3488,7 +3488,7 @@ MonoBehaviour:
   seed: 3
   amplitudeMultiplier: 0
   cam: {fileID: 219680531}
-  parallaxEffect: 0.01
+  parallaxEffect: 0.005
 --- !u!1 &1520484230
 GameObject:
   m_ObjectHideFlags: 0
@@ -3775,7 +3775,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.14, y: 0.4}
+  m_Size: {x: 1.8125, y: 2.21875}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -3930,8 +3930,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.12588944, y: -0.10801172}
-  m_Size: {x: 0.35710284, y: 1.3471398}
+  m_Offset: {x: 0, y: 0.68}
+  m_Size: {x: 0.35, y: 1.35}
   m_Direction: 0
 --- !u!50 &1763374769
 Rigidbody2D:
@@ -3988,8 +3988,12 @@ MonoBehaviour:
   isGrounded: 0
   trailRenderer: {fileID: 559377795}
   dashPower: 10
-  dashTime: 0.2
+  dashDuration: 0.2
   dashCooldown: 0.4
+  lightComboResetTime: 1
+  currentComboStep: 0
+  canQueueAttack: 0
+  maxHeavyChargeTime: 2
 --- !u!95 &1763374771
 Animator:
   serializedVersion: 7
