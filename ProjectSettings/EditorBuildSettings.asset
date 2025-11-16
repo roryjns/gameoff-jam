@@ -6,11 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Prototype.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 0
     path: Assets/Scenes/TestTileGenerator.unity
     guid: 93f9c010c30493649a6a190a4db0fe1a
+  - enabled: 1
+    path: Assets/Scenes/Prototype.unity
+    guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 5de7c5b8aec174a4cad3999b86ca272b
+  - enabled: 1
+    path: Assets/Scenes/PauseMenuScene.unity
+    guid: 0d6a3e249adab324781068e4fe3bab2c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
