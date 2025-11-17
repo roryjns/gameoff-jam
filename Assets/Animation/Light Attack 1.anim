@@ -22,18 +22,18 @@ AnimationClip:
     curve:
     - time: 0
       value: {fileID: -6145872667730287161, guid: fdabb092bb7a17b4cab3c5f3465b08ac, type: 3}
-    - time: 0.125
+    - time: 0.1
       value: {fileID: 3108315301061666720, guid: fdabb092bb7a17b4cab3c5f3465b08ac, type: 3}
-    - time: 0.25
+    - time: 0.2
       value: {fileID: 5670843616968309514, guid: fdabb092bb7a17b4cab3c5f3465b08ac, type: 3}
-    - time: 0.375
+    - time: 0.3
       value: {fileID: 4806998287635712323, guid: fdabb092bb7a17b4cab3c5f3465b08ac, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
     flags: 2
-  m_SampleRate: 8
+  m_SampleRate: 10
   m_WrapMode: 0
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -59,7 +59,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.75
+    m_StopTime: 0.6
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -79,21 +79,21 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.25
+  - time: 0.2
     functionName: EnableHitbox
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.375
+  - time: 0.3
     functionName: DisableHitbox
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.75
+  - time: 0.6
     functionName: CheckComboContinue
     data: 
     objectReferenceParameter: {fileID: 0}

@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundCheckRadius;
     [SerializeField] LayerMask tilemapLayer;
-    [SerializeField] bool isGrounded;
+    bool isGrounded;
     float jumpBufferCounter, coyoteTimeCounter;
 
     [Header("Dashing")]
@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (currentComboStep != 0) return;
+        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("LightAttack")) return;
 
         moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
         float targetVelocity = moveInput.x * moveSpeed;
@@ -178,6 +178,7 @@ public class PlayerController : MonoBehaviour
             return; 
         }
 
+        rb.linearVelocityX = 0;
         currentComboStep = 1;
         animator.SetInteger("ComboStep", currentComboStep);
         animator.SetTrigger("LightAttack");
@@ -202,6 +203,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnHeavyAttackBegin(InputAction.CallbackContext context)
     {
+        rb.linearVelocityX = 0;
         heavyChargeTime = 0;
         isChargingHeavy = true;
         animator.SetTrigger("HeavyBegin");

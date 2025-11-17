@@ -257,7 +257,7 @@ Transform:
   m_GameObject: {fileID: 56589791}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -2, z: 11}
+  m_LocalPosition: {x: 0, y: -2, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -882,7 +882,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -1272,6 +1272,7 @@ GameObject:
   - component: {fileID: 627700649}
   - component: {fileID: 627700650}
   - component: {fileID: 627700651}
+  - component: {fileID: 627700653}
   - component: {fileID: 627700652}
   m_Layer: 0
   m_Name: Dummy
@@ -1320,7 +1321,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 8dd6b5b0080da564a872fb598cd67dbc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1430,6 +1431,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   health: 16
+--- !u!114 &627700653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 627700646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caabf1b3165d59b4bbf7c1ea3767e63b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
+  material: {fileID: 2100000, guid: 8dd6b5b0080da564a872fb598cd67dbc, type: 2}
+  flashTime: 0.3
 --- !u!1 &665417076
 GameObject:
   m_ObjectHideFlags: 0
@@ -3432,6 +3447,55 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1252824981
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1252824983}
+  - component: {fileID: 1252824982}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1252824982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252824981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 417ffe060fbb9a34785f387abac083e3, type: 2}
+--- !u!4 &1252824983
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252824981}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1255028965
 GameObject:
   m_ObjectHideFlags: 0
@@ -4096,7 +4160,6 @@ MonoBehaviour:
   tilemapLayer:
     serializedVersion: 2
     m_Bits: 8
-  isGrounded: 0
   trailRenderer: {fileID: 559377795}
   dashPower: 10
   dashDuration: 0.2
@@ -4332,6 +4395,7 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 219680531}
   - {fileID: 619394802}
+  - {fileID: 1252824983}
   - {fileID: 665417079}
   - {fileID: 1704825573}
   - {fileID: 1763374766}
