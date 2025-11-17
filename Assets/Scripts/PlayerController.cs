@@ -28,13 +28,24 @@ public class PlayerController : MonoBehaviour
     bool canDash = true, isDashing = false, hasAirDashed = false;
 
     [Header("Attacking")]
-    [SerializeField] float lightComboResetTime;
-    [HideInInspector] public int currentComboStep;
-    public bool canQueueAttack;
-    bool comboQueued;
-
+    [SerializeField] Weapon weapon;
     [SerializeField] float maxHeavyChargeTime;
     float heavyChargeTime;
+    bool isChargingHeavy;
+    [HideInInspector] public int currentComboStep;
+    bool comboQueued;
+
+    [System.Serializable]
+    public struct HitboxSettings
+    {
+        public Vector2 offset;
+        public Vector2 size;
+        public int damage;
+    }
+
+    [Header("Attack Hitboxes")]
+    [SerializeField] HitboxSettings light1;
+    [SerializeField] HitboxSettings light2, light3, heavy;
 
     private void Awake()
     {
@@ -69,17 +80,24 @@ public class PlayerController : MonoBehaviour
     {
         if (isDashing) return;
 
+        if (isChargingHeavy)
+        {
+            heavyChargeTime += Time.deltaTime;
+            if (heavyChargeTime >= maxHeavyChargeTime) HeavyAttack();
+            return;
+        }
+
+        if (currentComboStep != 0) return;
+
         moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
         float targetVelocity = moveInput.x * moveSpeed;
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, tilemapLayer);
         animator.SetBool("Grounded", isGrounded);
         animator.SetBool("Moving", Mathf.Abs(targetVelocity) > 0.1);
 
-        if (isGrounded && rb.linearVelocity.y > 0f)
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // Prevent unintended bouncing
+        if (isGrounded && rb.linearVelocity.y > 0f) rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // Prevent unintended bouncing
 
-        if (rb.linearVelocityY < -15)
-            rb.linearVelocityY = -15; // Clamp falling speed to retain control during long falls
+        if (rb.linearVelocityY < -15) rb.linearVelocityY = -15; // Clamp falling speed to retain control during long falls
 
         if (isGrounded)
         {
@@ -92,8 +110,7 @@ public class PlayerController : MonoBehaviour
             targetVelocity *= 0.8f; // Slower horizontal movement while in the air
         }
 
-        if (jumpBufferCounter > 0f)
-            jumpBufferCounter -= Time.fixedDeltaTime;
+        if (jumpBufferCounter > 0f) jumpBufferCounter -= Time.fixedDeltaTime;
 
         // Horizontal movement
         float accelRate = (Mathf.Abs(targetVelocity) > 0.01f) ? acceleration : deceleration;  // Accelerate or decelerate
@@ -185,17 +202,50 @@ public class PlayerController : MonoBehaviour
 
     private void OnHeavyAttackBegin(InputAction.CallbackContext context)
     {
-        heavyChargeTime = 0f;
-        animator.SetTrigger("HeavyCharge");
+        heavyChargeTime = 0;
+        isChargingHeavy = true;
+        animator.SetTrigger("HeavyBegin");
         Debug.Log("Charging heavy attack...");
     }
 
     private void OnHeavyAttackRelease(InputAction.CallbackContext context)
     {
+        HeavyAttack();
+    }
+
+    private void HeavyAttack()
+    {
         if (heavyChargeTime <= 0) return;
-        heavyChargeTime = 0f;
+        heavyChargeTime = 0;
+        isChargingHeavy = false;
         animator.SetTrigger("HeavyRelease");
         Debug.Log("Heavy attack!");
+    }
+
+    public void EnableHitbox()
+    {
+        switch (currentComboStep)
+        {
+            case 0:
+                weapon.SetHitboxSettings(heavy);
+                break;
+            case 1:
+                weapon.SetHitboxSettings(light1);
+                break;
+            case 2:
+                weapon.SetHitboxSettings(light2);
+                break;
+            case 3:
+                weapon.SetHitboxSettings(light3);
+                break;
+        }
+        weapon.gameObject.SetActive(true);
+        weapon.DetectHits();
+    }
+
+    public void DisableHitbox()
+    {
+        weapon.gameObject.SetActive(false);
     }
 
     private void OnDrawGizmos()
