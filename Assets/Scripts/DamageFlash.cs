@@ -3,8 +3,8 @@ using System.Collections;
 
 public class DamageFlash : MonoBehaviour
 {
-    [SerializeField] private Material material; // The shared material reference
-    [SerializeField] private float flashTime;
+    [SerializeField] Material material; // The shared material reference
+    [SerializeField] float flashTime;
     private Material instanceMaterial; // Unique instance of the material
 
     private void Awake()
@@ -23,7 +23,6 @@ public class DamageFlash : MonoBehaviour
 
     private IEnumerator DamageFlasher()
     {
-        instanceMaterial.SetColor("_FlashColour", Color.white);
         float currentFlashAmount, elapsedTime = 0f;
         while (elapsedTime < flashTime)
         {
