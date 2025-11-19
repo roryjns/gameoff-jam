@@ -23,6 +23,8 @@ public class SoundManager : MonoBehaviour
         WALK,
         JUMP,
         DASH,
+        THUNDERCLOSE,
+        THUNDERFAR,
     }
 
     void Awake()
