@@ -108,6 +108,7 @@ public class PlayerController : MonoBehaviour
         {
             coyoteTimeCounter -= Time.fixedDeltaTime;
             targetVelocity *= 0.8f; // Slower horizontal movement while in the air
+            currentComboStep = 0;
         }
 
         if (jumpBufferCounter > 0f) jumpBufferCounter -= Time.fixedDeltaTime;
@@ -154,6 +155,10 @@ public class PlayerController : MonoBehaviour
         canDash = false; 
         isDashing = true;
         animator.SetBool("Dashing", true);
+        currentComboStep = 0;
+        animator.SetInteger("ComboStep", currentComboStep);
+        isChargingHeavy = false;
+        heavyChargeTime = 0f;
         float originalGravity = rb.gravityScale; 
         rb.gravityScale = 0; 
         rb.linearVelocity = new Vector2(transform.localScale.x * dashPower, 0f); 
@@ -170,7 +175,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnLightAttack(InputAction.CallbackContext context)
     {
-        if (!isGrounded) return;
+        if (!isGrounded || isDashing) return;
 
         if (animator.GetCurrentAnimatorStateInfo(0).IsTag("LightAttack")) 
         {
