@@ -5,8 +5,8 @@ using UnityEngine.Tilemaps;
 [RequireComponent(typeof(Tilemap))]
 public class TilemapBounds : MonoBehaviour
 {
-    public Vector2Int minBounds = Vector2Int.zero;
-    public Vector2Int maxBounds = new Vector2Int(15, 15);
+    Vector2Int minBounds = Vector2Int.zero;
+    Vector2Int maxBounds = new Vector2Int(15, 7);
     private Tilemap tilemap;
 #if UNITY_EDITOR
 

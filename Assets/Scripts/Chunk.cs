@@ -7,6 +7,7 @@ public class Chunk : MonoBehaviour
 {
     internal int X;
     internal int Y;
+    internal int Level;
     internal List<Spawner> spawnersToSpawnAfterCrash = new ();
     public ChunkType Type;
 
@@ -22,17 +23,17 @@ public class Chunk : MonoBehaviour
 
     public bool CanOpenBottomRight(int x, int y)
     {
-        return ExistTile(15, 1) && !ExistTile(14, 1);
+        return ExistTile(LevelGenerator.Instance.ChunkWidth - 1, 1) && !ExistTile(LevelGenerator.Instance.ChunkWidth - 2, 1);
     }
 
     internal bool CanOpenTopLeftRoof()
     {
-        return ExistTile(1, 15) && !ExistTile(1, 14);
+        return ExistTile(1, LevelGenerator.Instance.ChunkHeight - 1) && !ExistTile(1, LevelGenerator.Instance.ChunkHeight - 2);
     }
 
     internal bool CanOpenBottomLeftFloor()
     {
-        return ExistTile(1, 0) && !ExistTile(1, 1) && (X != 0 || Y != 0);
+        return ExistTile(1, 0) && !ExistTile(1, 1) &&  (X != LevelGenerator.Instance.StartingChunk.x || Y != LevelGenerator.Instance.StartingChunk.y);
     }
 
     const int openingSize = 7;
@@ -41,7 +42,7 @@ public class Chunk : MonoBehaviour
     {
         for (int i = 1; i < openingSize; i++)
         {
-            LevelGenerator.Instance.SetTile(X, Y, i, 15, null);
+            LevelGenerator.Instance.SetTile(X, Y, i, LevelGenerator.Instance.ChunkHeight - 1, null);
         }
     }
 
@@ -66,7 +67,7 @@ public class Chunk : MonoBehaviour
         }
     }
 
-    public void OnCrash()
+    public void OnWaveCrash()
     {
         foreach (Spawner spawner in spawnersToSpawnAfterCrash)
         {

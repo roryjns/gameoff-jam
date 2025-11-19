@@ -21,7 +21,7 @@ public class ChunkRequirements : ScriptableObject, IRequirement
             case ChunkRequirementType.IsNotStartOfLevel:
                 {
                     Chunk chunk = Chunk.GetChunkFromGameObject(gameObject);
-                    return chunk.X != 0 || chunk.Y != 0;
+                    return chunk.X != LevelGenerator.Instance.StartingChunk.x || chunk.Y != LevelGenerator.Instance.StartingChunk.y;
                 }
         }
         Debug.LogWarning($"Requirement at {gameObject.GetFullPath()}/{name} is configured with a wrong number");

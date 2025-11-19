@@ -6,7 +6,7 @@ using UnityEngine;
 public class GridBoundaryGizmo : MonoBehaviour
 {
     [Header("Grid Boundary Settings")]
-    public Vector2Int gridSize = new Vector2Int(16, 16);
+    Vector2Int gridSize = new Vector2Int(16,  8);
     public Color boundaryColor = Color.yellow;           
     public bool drawCenterCross = true;                  
 

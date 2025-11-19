@@ -9,12 +9,9 @@ public class DistantChunksDisabler : MonoBehaviour
         LevelGenerator lg = LevelGenerator.Instance;
         if (currentChunk == null)
         {
-            foreach (var row in lg.InstantiatedChunks)
+            foreach (var chunk in lg.InstantiatedChunks.Values)
             {
-                foreach (var chunk in row)
-                {
-                    chunk.gameObject.SetActive(false);
-                }
+                chunk.gameObject.SetActive(false);
             }
         }
         Chunk middleChunk = LevelGenerator.Instance.GetChunkFromPosition(transform.position);
@@ -25,7 +22,7 @@ public class DistantChunksDisabler : MonoBehaviour
         currentChunk = middleChunk;
         void ToggleChunk(int x, int y, bool active)
         {
-            Chunk chunk = lg.GetChunk(currentChunk.X + x, currentChunk.Y + y);
+            Chunk chunk = lg.GetChunk(currentChunk.X + x, currentChunk.Y + y, currentChunk.Level);
             if (chunk != null)
             {
                 chunk.gameObject.SetActive(active);
