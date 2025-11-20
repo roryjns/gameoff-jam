@@ -7,7 +7,8 @@ using static UnityEditor.PlayerSettings;
 public class LevelGenerator : MonoBehaviour
 {
     public static LevelGenerator Instance = null;
-    private List<GameObject> loadedChunks;
+    private List<GameObject> randomChunks;
+    private List<GameObject> fixedChunks;
     public Vector2Int StartingChunk = new Vector2Int(0, 1);
     public RuleTile RuleTile;
     public int NumChunksWide = 5;
@@ -16,15 +17,19 @@ public class LevelGenerator : MonoBehaviour
     public int ChunkHeight = 8;
     public Dictionary<Vector2Int, Chunk> InstantiatedChunks = new();
     internal Tilemap Tilemap = null;
-    public GameObject ExitChunk;
-    public GameObject BunkerChunk;
-    public GameObject BossArenaChunk;
+    private GameObject ExitChunk;
+    private GameObject BunkerChunk;
+    private GameObject BossArenaChunk;
     public LevelPattern pattern = LevelPattern.Random;
 
     void Awake()
     {
         Instance = this;
-        loadedChunks = new List<GameObject>(Resources.LoadAll<GameObject>("Chunks"));
+        randomChunks = new List<GameObject>(Resources.LoadAll<GameObject>("RandomChunks"));
+        fixedChunks = new List<GameObject>(Resources.LoadAll<GameObject>("FixedChunks"));
+        BossArenaChunk = fixedChunks.Find(x => x.name == "BossArenaChunk");
+        BunkerChunk = fixedChunks.Find(x => x.name == "BunkerChunk");
+        ExitChunk = fixedChunks.Find(x => x.name == "ExitChunk");
     }
 
     void Start()
@@ -194,9 +199,9 @@ public class LevelGenerator : MonoBehaviour
 
     private GameObject SpawnChunk(Vector2Int gridPos, Vector2Int gridChunkSize, int level, TileBase[] tiles, Vector3Int[] positions, ChunkType? chunkType)
     {
-        if (loadedChunks.Count == 0) return null;
-        int index = Random.Range(0, loadedChunks.Count);
-        var toInstantiate = loadedChunks[index];
+        if (randomChunks.Count == 0) return null;
+        int index = Random.Range(0, randomChunks.Count);
+        var toInstantiate = randomChunks[index];
         if (toInstantiate == null) return null;
 
         Vector2Int worldGridPos = GetChunkPos(gridPos.x, gridPos.y, level);
