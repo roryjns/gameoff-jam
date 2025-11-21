@@ -10,13 +10,13 @@ public class TidalWave : MonoBehaviour
     [SerializeField] Transform cameraTransform;
     [SerializeField] Transform foregroundWave;
 
-    WaveLayer waveLayer;
+    Water waveLayer;
     float timer, dormantTimer, startY, offsetY, lastOffsetY;
     bool isDormant = true;
 
     void Start()
     {
-        waveLayer = GetComponent<WaveLayer>();
+        waveLayer = GetComponent<Water>();
         startY = transform.position.y;
     }
 

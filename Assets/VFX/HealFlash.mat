@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DamageFlashMat
+  m_Name: HealFlash
   m_Shader: {fileID: -6465566751694194690, guid: 33ae8851ecab6a14b957b0406860aa84, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -56,6 +56,6 @@ Material:
     m_Floats:
     - _FlashAmount: 0
     m_Colors:
-    - _FlashColour: {r: 2.670157, g: 2.670157, b: 2.670157, a: 1}
+    - _FlashColour: {r: 0, g: 2.9960787, b: 0.42352936, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

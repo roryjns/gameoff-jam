@@ -80,6 +80,10 @@ public class PlayerController : MonoBehaviour
     {
         if (isDashing) return;
 
+        moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
+
+        if ((moveInput.x > 0 && !facingRight) || (moveInput.x < 0 && facingRight)) Flip();
+
         if (isChargingHeavy)
         {
             heavyChargeTime += Time.deltaTime;
@@ -87,12 +91,15 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("LightAttack")) return;
+        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("LightAttack"))
+        {
+            rb.linearVelocityX = 0;
+            return;
+        }
 
-        moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
-        float targetVelocity = moveInput.x * moveSpeed;
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, tilemapLayer);
         animator.SetBool("Grounded", isGrounded);
+        float targetVelocity = moveInput.x * moveSpeed;
         animator.SetBool("Moving", Mathf.Abs(targetVelocity) > 0.1);
 
         if (isGrounded && rb.linearVelocity.y > 0f) rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // Prevent unintended bouncing
@@ -114,20 +121,17 @@ public class PlayerController : MonoBehaviour
         if (jumpBufferCounter > 0f) jumpBufferCounter -= Time.fixedDeltaTime;
 
         // Horizontal movement
-        float accelRate = (Mathf.Abs(targetVelocity) > 0.01f) ? acceleration : deceleration;  // Accelerate or decelerate
+        float accelRate = (Mathf.Abs(targetVelocity) > 0.01f) ? acceleration : deceleration;
         rb.linearVelocityX = Mathf.MoveTowards(rb.linearVelocityX, targetVelocity, accelRate * Time.fixedDeltaTime);
 
         // Jumping
         if (jumpBufferCounter > 0f && coyoteTimeCounter > 0f)
         {
-            rb.linearVelocityY = jumpForce; // Jump
+            rb.linearVelocityY = jumpForce;
             jumpBufferCounter = coyoteTimeCounter = 0f;
         }
 
         animator.SetFloat("VerticalSpeed", rb.linearVelocityY);
-
-        if ((moveInput.x > 0 && !facingRight) || (moveInput.x < 0 && facingRight))
-            Flip();
     }
 
     private void Flip()
@@ -183,7 +187,6 @@ public class PlayerController : MonoBehaviour
             return; 
         }
 
-        rb.linearVelocityX = 0;
         currentComboStep = 1;
         animator.SetInteger("ComboStep", currentComboStep);
         animator.SetTrigger("LightAttack");

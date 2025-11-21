@@ -93,7 +93,7 @@ Material:
     - _WaveSpeed: 0.2
     - _ZWrite: 0
     m_Colors:
-    - _BottomColour: {r: 0.18778922, g: 0.3910343, b: 0.4716981, a: 1}
+    - _BottomColour: {r: 0.18778914, g: 0.39103422, b: 0.4716981, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 0}
     - _ColourDeep: {r: 0.09411765, g: 0.20392157, b: 0.19607843, a: 0}
     - _ColourShallow: {r: 0.18216442, g: 0.36009243, b: 0.4490565, a: 1}

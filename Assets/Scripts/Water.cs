@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class WaveLayer : MonoBehaviour
+public class Water : MonoBehaviour
 {
     [Header("Wave Shape")]
     [SerializeField] int segments;
@@ -14,7 +14,8 @@ public class WaveLayer : MonoBehaviour
     float startPos;
 
     Mesh mesh;
-    Vector3[] baseVertices;
+    public Vector3[] baseVertices;
+    [HideInInspector] public int[] topVerticesIndex;
 
     float phaseOffset;
     float frequency1, frequency2, frequency3;
@@ -22,13 +23,12 @@ public class WaveLayer : MonoBehaviour
     float chaosOffsetX, chaosOffsetT;
     float speedMultiplier;
 
-    void Start()
+    private void Awake()
     {
         amplitudeMultiplier = 1f;
         startPos = transform.position.x;
-        mesh = new Mesh();
-        GetComponent<MeshFilter>().mesh = mesh;
-        BuildMesh();
+
+        GenerateMesh();
 
         // Seed-based random wave pattern
         Random.InitState(seed);
@@ -43,8 +43,10 @@ public class WaveLayer : MonoBehaviour
         speedMultiplier = Random.Range(0.7f, 1.3f);
     }
 
-    void BuildMesh()
+    private void GenerateMesh()
     {
+        mesh = new Mesh();
+        GetComponent<MeshFilter>().mesh = mesh;
         Vector3[] verts = new Vector3[(segments + 1) * 2];
         int[] tris = new int[segments * 6];
         Vector2[] uvs = new Vector2[verts.Length];
@@ -58,6 +60,12 @@ public class WaveLayer : MonoBehaviour
             float u = i / (float)segments;
             uvs[i] = new Vector2(u, 1f);
             uvs[i + segments + 1] = new Vector2(u, 0f);
+        }
+
+        topVerticesIndex = new int[segments + 1];
+        for (int i = 0; i <= segments; i++)
+        {
+            topVerticesIndex[i] = i; // top row vertices only
         }
 
         for (int i = 0; i < segments; i++)
@@ -79,27 +87,23 @@ public class WaveLayer : MonoBehaviour
         mesh.vertices = verts;
         mesh.triangles = tris;
         mesh.uv = uvs;
-        mesh.RecalculateNormals();
-        mesh.RecalculateBounds();
         baseVertices = mesh.vertices;
     }
 
-    void Update()
+    private void FixedUpdate()
     {
         AnimateSurface();
         if (parallaxEffect != 0) ParallaxMovement();
     }
 
-    void AnimateSurface()
+    private void AnimateSurface()
     {
         Vector3[] verts = mesh.vertices;
+        float t = Time.time * speedMultiplier + phaseOffset;
 
         for (int i = 0; i <= segments; i++)
         {
-            float x = baseVertices[i].x;
-
-            float t = Time.time * speedMultiplier + phaseOffset;
-
+            float x = baseVertices[i].x;    
             float wave1 = Mathf.Sin(t * frequency1 + x) * amplitude;
             float wave2 = Mathf.Sin(t * frequency2 + x / 0.7f) * (amplitude * 0.6f);
             float wave3 = Mathf.Sin(t * frequency3 + x / 1.6f) * (amplitude * 0.3f);
@@ -110,22 +114,18 @@ public class WaveLayer : MonoBehaviour
             verts[i].y = (wave1 + wave2 + wave3) * randomAmp * amplitudeMultiplier + chaos;
         }
 
-        // Make ends seamless: force the left and right endpoints to the same value
+        // Smooth endpoints
         float endY = (verts[0].y + verts[segments].y) * 0.5f;
-
         verts[0].y = endY;
         verts[segments].y = endY;
 
         for (int i = 1; i < segments; i++) // Soften segments to be less triangular
-        {
             verts[i].y = (verts[i - 1].y + verts[i].y + verts[i + 1].y) / 3f;
-        }
 
-        mesh.vertices = verts;
-        mesh.RecalculateBounds();
+        mesh.vertices = baseVertices = verts;
     }
 
-    void ParallaxMovement()
+    private void ParallaxMovement()
     {
         float distance = cam.transform.position.x * parallaxEffect;
         float movement = cam.transform.position.x * (1 - parallaxEffect);
