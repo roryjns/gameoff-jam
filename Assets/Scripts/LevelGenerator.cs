@@ -107,8 +107,8 @@ public class LevelGenerator : MonoBehaviour
             {
                 for (int y = 0; y < ChunkHeight; y++)
                 {
-                    SetTile(0, yChunk, -1 - x, y, RuleTile);
-                    SetTile(NumChunksWide, yChunk, x, y, RuleTile);
+                    SetTile(offset.x, yChunk + offset.y, -1 - x, y, RuleTile);
+                    SetTile(NumChunksWide + offset.x, yChunk + offset.y, x, y, RuleTile);
                 }
             }
         }
@@ -118,25 +118,18 @@ public class LevelGenerator : MonoBehaviour
             {
                 for (int y = 0; y < ChunkHeight; y++)
                 {
-                    SetTile(xChunk, NumChunksHigh, x, y, RuleTile);
+                    SetTile(xChunk + offset.x, NumChunksHigh + offset.y, x, y, RuleTile);
                 }
             }
         }
-        //for (int x = 0; x < NumChunksWide; x++)
-        //{
-        //    for (int i = 0; i < ChunkHeight; i++)
-        //    {
-        //        SetTile(x, NumChunksHigh, i, 0, RuleTile);
-        //    }
-        //}
         for (int y = 0; y < NumChunksHigh; y++)
         {
             for (int x = 0; x < NumChunksWide; x++)
             {
-                if (CanOpenBottomRight(x, y) && CanOpenBottomLeft(x + 1, y))
+                if (CanOpenBottomRight(offset.x + x, offset.y + y) && CanOpenBottomLeft(offset.x + x + 1, offset.y + y))
                 {
-                    OpenBottomRight(x, y);
-                    OpenBottomLeft(x + 1, y);
+                    OpenBottomRight(offset.x + x, offset.y + y);
+                    OpenBottomLeft(offset.x + x + 1, offset.y + y);
                 }
             }
         }
@@ -144,7 +137,7 @@ public class LevelGenerator : MonoBehaviour
 
     public Vector2Int GetChunkPos(int x, int y, int level)
     {
-        return new Vector2Int((NumChunksWide - 1) * (level - 1) + x, (NumChunksHigh + 1) * -(level - 1)+ y);
+        return new Vector2Int((NumChunksWide - 1) * (level - 1) + x, (NumChunksHigh + 1) * -(level - 1) + y);
     }
 
     private bool ShouldSpawnSpecialChunk(Vector2Int gridPos, Vector2Int gridChunkSize, int level, TileBase[] tiles, Vector3Int[] positions)
@@ -164,6 +157,11 @@ public class LevelGenerator : MonoBehaviour
     {
         Tilemap.SetTile(new Vector3Int(chunkX * ChunkWidth + tileX, -chunkY * ChunkHeight + tileY), tile);
     }
+    public void SetTile(Chunk chunk, int tileX, int tileY, TileBase tile)
+    {
+        Vector2Int pos = GetChunkPos(chunk.X, chunk.Y, chunk.Level);
+        SetTile(pos.x, pos.y, tileX, tileY, tile);
+    }
 
     const int openingSize = 7;
     private void OpenBottomLeft(int x, int y)
@@ -180,6 +178,12 @@ public class LevelGenerator : MonoBehaviour
         {
             SetTile(x, y, ChunkWidth - 1, i, null);
         }
+    }
+
+    internal bool ExistsTile(Chunk chunk, int tileX, int tileY)
+    {
+        Vector2Int pos = GetChunkPos(chunk.X, chunk.Y, chunk.Level);
+        return ExistsTile(pos.x, pos.y, tileX, tileY);
     }
 
     internal bool ExistsTile(int chunkX, int chunkY, int tileX, int tileY)
@@ -244,16 +248,16 @@ public class LevelGenerator : MonoBehaviour
         return obj;
     }
 
-    internal bool CanChunkOpenTopLeft(Chunk chunk)
+    internal bool CanChunkAndOtherOpenRoofLeft(Chunk chunk)
     {
         Chunk other = GetChunk(chunk.X, chunk.Y - 1, chunk.Level);
         if (other == null) return false;
-        return chunk.CanOpenTopLeftRoof() && other.CanOpenBottomLeftFloor();
+        return chunk.CanOpenRoofLeft() && other.CanOpenFloorLeft();
     }
 
     public Chunk GetChunk(int x, int y, int level)
     {
-        if (InstantiatedChunks.TryGetValue(GetChunkPos(x,y,level), out var chunk))
+        if (InstantiatedChunks.TryGetValue(GetChunkPos(x, y, level), out var chunk))
         {
             return chunk;
         }

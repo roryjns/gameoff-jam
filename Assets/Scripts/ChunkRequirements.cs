@@ -15,7 +15,7 @@ public class ChunkRequirements : ScriptableObject, IRequirement
             case ChunkRequirementType.ChunkCanOpenTopLeftCeiling:
                 {
                     Chunk chunk = Chunk.GetChunkFromGameObject(gameObject);
-                    bool can = LevelGenerator.Instance.CanChunkOpenTopLeft(chunk);
+                    bool can = LevelGenerator.Instance.CanChunkAndOtherOpenRoofLeft(chunk);
                     return can;
                 }
             case ChunkRequirementType.IsNotStartOfLevel:

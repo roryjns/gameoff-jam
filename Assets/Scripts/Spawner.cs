@@ -44,10 +44,14 @@ public class Spawner : MonoBehaviour
                 return;
             }
         }
-        if (SpawnChanceOfAll != 100 && UnityEngine.Random.value * 100 > SpawnChanceOfAll)
+        if (SpawnChanceOfAll != 100)
         {
-            Destroy(gameObject);
-            return;
+            float notSpawnChance = UnityEngine.Random.value * 100;
+            if (notSpawnChance > SpawnChanceOfAll)
+            {
+                Destroy(gameObject);
+                return;
+            }
         }
         List<int> indices = Enumerable.Range(0, transform.childCount).ToList();
         List<int> toKeep = new List<int>(MaxSpawnCount);

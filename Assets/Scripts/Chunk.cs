@@ -13,7 +13,7 @@ public class Chunk : MonoBehaviour
 
     public bool ExistTile(int tileX, int tileY)
     {
-        return LevelGenerator.Instance.ExistsTile(X, Y, tileX, tileY);
+        return LevelGenerator.Instance.ExistsTile(this, tileX, tileY);
     }
 
     public bool CanOpenBottomLeft(int x, int y)
@@ -26,12 +26,12 @@ public class Chunk : MonoBehaviour
         return ExistTile(LevelGenerator.Instance.ChunkWidth - 1, 1) && !ExistTile(LevelGenerator.Instance.ChunkWidth - 2, 1);
     }
 
-    internal bool CanOpenTopLeftRoof()
+    internal bool CanOpenRoofLeft()
     {
         return ExistTile(1, LevelGenerator.Instance.ChunkHeight - 1) && !ExistTile(1, LevelGenerator.Instance.ChunkHeight - 2);
     }
 
-    internal bool CanOpenBottomLeftFloor()
+    internal bool CanOpenFloorLeft()
     {
         return ExistTile(1, 0) && !ExistTile(1, 1) &&  (X != LevelGenerator.Instance.StartingChunk.x || Y != LevelGenerator.Instance.StartingChunk.y);
     }
@@ -42,7 +42,7 @@ public class Chunk : MonoBehaviour
     {
         for (int i = 1; i < openingSize; i++)
         {
-            LevelGenerator.Instance.SetTile(X, Y, i, LevelGenerator.Instance.ChunkHeight - 1, null);
+            LevelGenerator.Instance.SetTile(this, i, LevelGenerator.Instance.ChunkHeight - 1, null);
         }
     }
 
@@ -50,7 +50,7 @@ public class Chunk : MonoBehaviour
     {
         for (int i = 1; i < openingSize; i++)
         {
-            LevelGenerator.Instance.SetTile(X, Y, i, 0, null);
+            LevelGenerator.Instance.SetTile(this, i, 0, null);
         }
     }
     public static Chunk GetChunkFromGameObject(GameObject gameObject)
