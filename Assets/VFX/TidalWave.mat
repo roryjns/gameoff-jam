@@ -99,7 +99,7 @@ Material:
     - _ColourShallow: {r: 0.18216442, g: 0.36009243, b: 0.4490565, a: 1}
     - _FoamColour: {r: 0.6830188, g: 0.6830188, b: 0.6830188, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _TopColour: {r: 0.050980393, g: 0.15294118, b: 0.22352941, a: 1}
+    - _TopColour: {r: 0.13273758, g: 0.4579037, b: 0.6830188, a: 1}
     - _WaterColour: {r: 0.09411765, g: 0.20392157, b: 0.25882354, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -14,7 +14,7 @@ public class Water : MonoBehaviour
     float startPos;
 
     Mesh mesh;
-    public Vector3[] baseVertices;
+    [HideInInspector] public Vector3[] baseVertices;
     [HideInInspector] public int[] topVerticesIndex;
 
     float phaseOffset;

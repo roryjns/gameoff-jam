@@ -104,7 +104,6 @@ public class WaterSplash : MonoBehaviour
 
     private void Splash(Collider2D collision, float force)
     {
-        Debug.Log("splash " + force);
         float radius = collision.bounds.extents.x * playerCollisionRadiusMultiplier;
         Vector2 center = collision.transform.position;
 
@@ -115,7 +114,6 @@ public class WaterSplash : MonoBehaviour
             if (distanceSquared <= radius * radius)
             {
                 waterPoints[i].velocity = force;
-                Debug.Log("adjusted point");
             }
         }
     }
@@ -126,21 +124,17 @@ public class WaterSplash : MonoBehaviour
         {
             if (collision.TryGetComponent<Rigidbody2D>(out var rb))
             {
-                /*
                 // Spawn particles
-                Vector2 localPos = gameObject.transform.localPosition;
-                Vector2 hitObjectPos = collision.transform.position;
-                Bounds hitObjectBounds = collision.bounds;
-                Vector3 spawnPos = Vector3.zero;
+                Vector3 spawnPos;
 
-                if (collision.transform.position.y >= edgeCollider.points[1].y + edgeCollider.offset.y + localPos.y)
-                    spawnPos = hitObjectPos - new Vector2(0f, hitObjectBounds.extents.y); // Hit from above
+                if (collision.transform.position.y >= edgeCollider.points[1].y + edgeCollider.offset.y + gameObject.transform.localPosition.y)
+                    spawnPos = (Vector2)collision.transform.position - new Vector2(0f, collision.bounds.extents.y); // Hit from above
                 else
-                    spawnPos = hitObjectPos + new Vector2(0f, hitObjectBounds.extents.y); // Hit from below
-                
-                Instantiate(splashParticles, spawnPos, Quaternion.identity); 
-                */
+                    spawnPos = (Vector2)collision.transform.position + new Vector2(0f, collision.bounds.extents.y); // Hit from below
 
+                ObjectPooler.Instance.GetFromPool("Splash Particle", spawnPos, Quaternion.identity);
+
+                // Apply a force to the springs
                 float velocity = rb.linearVelocity.y * forceMultiplier;
                 velocity = Mathf.Clamp(Mathf.Abs(velocity), 0f, maxForce);
                 float multiplier = rb.linearVelocity.y >= 0 ? 1 : -1;
