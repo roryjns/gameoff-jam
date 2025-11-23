@@ -6,16 +6,13 @@ public class WaterSplash : MonoBehaviour
     [Header("Springs")]
     [SerializeField] int wavePropagationIterations;
     [SerializeField] float springConstant, damping, spread;
-
-    [Header("Force")]
     [SerializeField] float forceMultiplier;
     [SerializeField] float maxForce;
-
-    [Header("Collision")]
     [SerializeField] float playerCollisionRadiusMultiplier;
-    
+    [SerializeField] float waterLevel; // y level of the water's surface
+
     Mesh mesh;
-    Water water;
+    Wave wave;
     int[] topVerticesIndex;
     Vector3[] vertices;
     float[] splashOffset;  // length = topVerticesIndex.Length
@@ -34,9 +31,9 @@ public class WaterSplash : MonoBehaviour
     {
         mesh = GetComponent<MeshFilter>().mesh;
         edgeCollider = GetComponent<EdgeCollider2D>();
-        water = GetComponent<Water>();
+        wave = GetComponent<Wave>();
         vertices = mesh.vertices;
-        topVerticesIndex = water.topVerticesIndex;
+        topVerticesIndex = wave.topVerticesIndex;
         splashOffset = new float[topVerticesIndex.Length];
         CreateWaterPoints();
     }
@@ -83,7 +80,7 @@ public class WaterSplash : MonoBehaviour
         for (int i = 0; i < topVerticesIndex.Length; i++)
         {
             int v = topVerticesIndex[i];
-            vertices[v].y = water.baseVertices[v].y + splashOffset[i];
+            vertices[v].y = wave.baseVertices[v].y + splashOffset[i];
         }
 
         mesh.vertices = vertices;

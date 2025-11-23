@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement")]
     [SerializeField] float moveSpeed;
     [SerializeField] float jumpForce, jumpBufferTime, coyoteTime, acceleration, deceleration;
+    public bool underwater;
     Vector2 moveInput;
     bool facingRight = true;
 

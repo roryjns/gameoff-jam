@@ -1,33 +1,19 @@
 using UnityEngine;
 
-public class Water : MonoBehaviour
+public class Wave : MonoBehaviour
 {
-    [Header("Wave Shape")]
-    [SerializeField] int segments;
+    [SerializeField] int segments, seed;
     [SerializeField] float width, height, amplitude;
-    [SerializeField] int seed = 0;
     [HideInInspector] public float amplitudeMultiplier;
-
-    [Header("Parallax Settings")]
-    [SerializeField] Transform cam;
-    [SerializeField] float parallaxEffect;
-    float startPos;
-
-    Mesh mesh;
     [HideInInspector] public Vector3[] baseVertices;
     [HideInInspector] public int[] topVerticesIndex;
-
-    float phaseOffset;
-    float frequency1, frequency2, frequency3;
-    float noiseOffsetX, noiseOffsetT;
-    float chaosOffsetX, chaosOffsetT;
-    float speedMultiplier;
+    Mesh mesh;
+    float phaseOffset, frequency1, frequency2, frequency3;
+    float noiseOffsetX, noiseOffsetT, chaosOffsetX, chaosOffsetT, speedMultiplier;
 
     private void Awake()
     {
         amplitudeMultiplier = 1f;
-        startPos = transform.position.x;
-
         GenerateMesh();
 
         // Seed-based random wave pattern
@@ -92,18 +78,12 @@ public class Water : MonoBehaviour
 
     private void FixedUpdate()
     {
-        AnimateSurface();
-        if (parallaxEffect != 0) ParallaxMovement();
-    }
-
-    private void AnimateSurface()
-    {
         Vector3[] verts = mesh.vertices;
         float t = Time.time * speedMultiplier + phaseOffset;
 
         for (int i = 0; i <= segments; i++)
         {
-            float x = baseVertices[i].x;    
+            float x = baseVertices[i].x;
             float wave1 = Mathf.Sin(t * frequency1 + x) * amplitude;
             float wave2 = Mathf.Sin(t * frequency2 + x / 0.7f) * (amplitude * 0.6f);
             float wave3 = Mathf.Sin(t * frequency3 + x / 1.6f) * (amplitude * 0.3f);
@@ -123,16 +103,5 @@ public class Water : MonoBehaviour
             verts[i].y = (verts[i - 1].y + verts[i].y + verts[i + 1].y) / 3f;
 
         mesh.vertices = baseVertices = verts;
-    }
-
-    private void ParallaxMovement()
-    {
-        float distance = cam.transform.position.x * parallaxEffect;
-        float movement = cam.transform.position.x * (1 - parallaxEffect);
-        transform.position = new(startPos + distance, transform.position.y, transform.position.z);
-
-        // If background has reached the end of its width then move it for infinite scrolling
-        if (movement > startPos + width) { startPos += width; }
-        else if (movement < startPos - width) { startPos -= width; }
     }
 }

@@ -9,31 +9,73 @@ public class TidalWave : MonoBehaviour
     [SerializeField] AnimationCurve verticalSpeed; // Decrease as the wave rises, increase as it falls
     [SerializeField] Transform cameraTransform;
     [SerializeField] Transform foregroundWave;
-
-    Water waveLayer;
+    Wave wave;
     float timer, dormantTimer, startY, offsetY, lastOffsetY;
     bool isDormant = true;
 
-    void Start()
+    [SerializeField] Transform interactableWater;  // Your water object that can rise
+    [SerializeField] float interactableRiseHeight;
+    float interactableStartHeight, riseDuration, holdDuration, fallDuration;
+
+    private void Start()
     {
-        waveLayer = GetComponent<Water>();
+        wave = GetComponent<Wave>();
         startY = transform.position.y;
+        if (interactableWater != null) interactableStartHeight = interactableWater.position.y;
+        riseDuration = dormantDuration * 0.1f;
+        holdDuration = dormantDuration * 0.6f;
+        fallDuration = dormantDuration * 0.3f;
     }
 
-    void Update()
+    private void FixedUpdate()
     {
         if (isDormant)
         {
             dormantTimer += Time.deltaTime;
+            wave.amplitudeMultiplier = Mathf.Lerp(wave.amplitudeMultiplier, 1f, Time.deltaTime * 0.3f);
 
-            // Gradually restore original amplitude
-            waveLayer.amplitudeMultiplier = Mathf.Lerp(waveLayer.amplitudeMultiplier, 1f, Time.deltaTime * 0.3f);
+            if (interactableWater != null)
+            {
+                if (dormantTimer <= riseDuration)
+                {
+                    float t = dormantTimer / riseDuration;
 
+                    interactableWater.position = new Vector3(
+                        interactableWater.position.x,
+                        Mathf.Lerp(interactableStartHeight, interactableRiseHeight, t),
+                        interactableWater.position.z
+                    );
+                }
+
+                else if (dormantTimer <= riseDuration + holdDuration)
+                {
+                    interactableWater.position = new Vector3(
+                        interactableWater.position.x,
+                        interactableRiseHeight,
+                        interactableWater.position.z
+                    );
+                }
+
+                else
+                {
+                    float fallTime = dormantTimer - (riseDuration + holdDuration);
+                    float t = fallTime / fallDuration;
+
+                    interactableWater.position = new Vector3(
+                        interactableWater.position.x,
+                        Mathf.Lerp(interactableRiseHeight, interactableStartHeight, t),
+                        interactableWater.position.z
+                    );
+                }
+            }
+            
+            // Start next wave
             if (dormantTimer >= dormantDuration)
             {
                 dormantTimer = 0f;
                 isDormant = false;
                 lastOffsetY = startY = transform.position.y - cameraTransform.position.y;
+                if (interactableWater != null) interactableWater.gameObject.SetActive(false);
             }
             return;
         }
@@ -48,8 +90,8 @@ public class TidalWave : MonoBehaviour
         transform.position = new Vector3(transform.position.x, baseY + offsetY, transform.position.z);
 
         // Gradually flatten the top at the start
-        if (normalizedTime < 0.3f) waveLayer.amplitudeMultiplier = Mathf.Lerp(1f, 1f - flattenAmount, normalizedTime / 0.3f);
-        else waveLayer.amplitudeMultiplier = 1f - flattenAmount;
+        if (normalizedTime < 0.3f) wave.amplitudeMultiplier = Mathf.Lerp(1f, 1f - flattenAmount, normalizedTime / 0.3f);
+        else wave.amplitudeMultiplier = 1f - flattenAmount;
 
         // Move foreground wave down the screen when background wave starts falling
         if (offsetY < lastOffsetY)
@@ -63,13 +105,15 @@ public class TidalWave : MonoBehaviour
         }
 
         lastOffsetY = offsetY;
-        
+
         // Wave has finishing falling and is now dormant
         if (timer >= waveDuration)
         {
             timer = 0f;
             isDormant = true;
+            if (interactableWater != null) interactableWater.gameObject.SetActive(true);
             dormantTimer = 0f;
+
             if (foregroundWave.gameObject.activeSelf)
             {
                 foregroundWave.gameObject.SetActive(false);
