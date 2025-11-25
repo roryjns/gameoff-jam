@@ -83,7 +83,7 @@ Material:
     - _MaxHeight: 90
     - _MinHeight: 3
     - _NoiseScale: 10
-    - _NoiseSpeed: 0.75
+    - _NoiseSpeed: 0.8
     - _NoiseStrength: 12
     - _PixelSize: 0.03
     - _QueueControl: 0
