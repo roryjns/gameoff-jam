@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float jumpForce, jumpBufferTime, coyoteTime, acceleration, deceleration, groundCheckRadius;
     [SerializeField] Transform groundCheck;
     [SerializeField] LayerMask tilemapLayer;
-    public bool underwater;
+    [HideInInspector] public bool underwater;
     Vector2 moveInput;
     bool facingRight = true;
     bool isGrounded;

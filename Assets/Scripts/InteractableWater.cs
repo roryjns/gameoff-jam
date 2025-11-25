@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class WaterSplash : MonoBehaviour
+public class InteractableWater : MonoBehaviour
 {
     [SerializeField] int wavePropagationIterations;
     [SerializeField] float springConstant, damping, spread, forceMultiplier, maxForce;
@@ -116,7 +116,11 @@ public class WaterSplash : MonoBehaviour
             // Hit from above, now underwater
             spawnPos = new Vector2(collision.transform.position.x, collision.bounds.min.y);
             if (collision.gameObject.TryGetComponent<PlayerController>(out var player)) player.underwater = true;
-            if (collision.gameObject.TryGetComponent<Enemy>(out var enemy)) enemy.Heal();
+            else if (collision.gameObject.TryGetComponent<Enemy>(out var enemy))
+            {
+                enemy.underwater = true;
+                enemy.Heal();
+            }
         }
         else
         {
@@ -132,11 +136,20 @@ public class WaterSplash : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (!collision.gameObject.TryGetComponent<PlayerController>(out var player)) return;
+        if (collision.gameObject.TryGetComponent<PlayerController>(out var player))
+        {
+            if (collision.bounds.center.y >= edgeCollider.points[1].y + edgeCollider.offset.y + gameObject.transform.localPosition.y)
+                player.underwater = false;
+            else
+                player.underwater = true;
+        }
 
-        if (collision.bounds.center.y >= edgeCollider.points[1].y + edgeCollider.offset.y + gameObject.transform.localPosition.y)
-            player.underwater = false;
-        else
-            player.underwater = true;
+        else if (collision.gameObject.TryGetComponent<Enemy>(out var enemy))
+        {
+            if (collision.bounds.center.y >= edgeCollider.points[1].y + edgeCollider.offset.y + gameObject.transform.localPosition.y)
+                enemy.underwater = false;
+            else
+                enemy.underwater = true;
+        }
     }
 }

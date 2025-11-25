@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] int health, maxHealth;
+    [SerializeField] int health, maxHealth, baseOrbsDropped;
+    [HideInInspector] public bool underwater;
     Flash flash;
-    bool underwater;
 
     private void Awake()
     {
@@ -26,6 +26,12 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        var orbObject = ObjectPooler.Instance.GetFromPool("Orbs", transform.position + Vector3.up, Quaternion.identity);
+        Orbs orbs = orbObject.GetComponent<Orbs>();
+
+        if (underwater) orbs.SetOrbCount(baseOrbsDropped * 2);
+        else orbs.SetOrbCount(baseOrbsDropped);
+        
         gameObject.SetActive(false);
     }
 }
