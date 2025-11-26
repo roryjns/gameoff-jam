@@ -28,6 +28,7 @@ public class Orbs : MonoBehaviour
             ParticleSystem.Particle p = particles[i];
             p.remainingLifetime = 0;
             particles[i] = p;
+            GameManager.Instance.OrbCollected();
         }
 
         ps.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);

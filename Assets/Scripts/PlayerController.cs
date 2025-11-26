@@ -25,6 +25,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float dashPower, dashDuration, dashCooldown;
     bool canDash = true, isDashing = false, hasAirDashed = false;
 
+    [Header("Health")]
+    [SerializeField] HealthBar healthBar;
+    [SerializeField] int currentHealth;
+    [SerializeField] int maxHealth;
+
     [Header("Attacking")]
     [SerializeField] Weapon weapon;
     [SerializeField] float maxHeavyChargeTime;
@@ -76,6 +81,13 @@ public class PlayerController : MonoBehaviour
         playerInput.actions["Light Attack"].started -= OnLightAttack;
         playerInput.actions["Heavy Attack"].started -= OnHeavyAttackBegin;
         playerInput.actions["Heavy Attack"].canceled -= OnHeavyAttackRelease;
+    }
+
+    private void Start()
+    {
+        healthBar.Initialise(PlayerPrefs.GetInt("MaxHealth", 5));
+        healthBar.UpdateHealth(currentHealth);
+        GameManager.Instance.runData.currentHealth = currentHealth;
     }
 
     private void FixedUpdate()
@@ -161,7 +173,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private IEnumerator Dash() 
-    { 
+    {
         canDash = false; 
         isDashing = true;
         animator.SetBool("Dashing", true);
@@ -264,12 +276,21 @@ public class PlayerController : MonoBehaviour
         weapon.gameObject.SetActive(false);
     }
 
-    private void OnDrawGizmos()
+    public void TakeDamage(int damage)
     {
-        if (groundCheck != null)
+        currentHealth -= damage;
+        if (currentHealth < 0)
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+            currentHealth = 0;
+            GameManager.Instance.runData.currentHealth = currentHealth;
+            Die();
         }
+        healthBar.UpdateHealth(currentHealth);
+    }
+
+    private void Die()
+    {
+        animator.SetTrigger("Death");
+        StartCoroutine(GameManager.Instance.OnPlayerDeath());
     }
 }

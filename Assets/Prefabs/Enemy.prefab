@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 795873919123051534}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: -0.2, z: 0}
-  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -170,8 +170,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caabf1b3165d59b4bbf7c1ea3767e63b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
-  material: {fileID: 2100000, guid: 8dd6b5b0080da564a872fb598cd67dbc, type: 2}
-  flashTime: 0.3
+  damageMat: {fileID: 0}
+  healMat: {fileID: 0}
 --- !u!114 &3010811688983718142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,3 +185,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   health: 30
+  maxHealth: 0
+  baseOrbsDropped: 0
+  underwater: 0
