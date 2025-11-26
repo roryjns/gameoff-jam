@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: TidalWave
+  m_Name: ForegroundWave
   m_Shader: {fileID: -6465566751694194690, guid: a8ff073686ed2fe40ade622d18b0c940, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -37,23 +37,27 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _BumpMap:
+    - _AlphaTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Cube:
+    - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _FaceTex:
-        m_Texture: {fileID: 0}
+    - _CausticsTex:
+        m_Texture: {fileID: 2800000, guid: 4f3a8e33f6937314c86fed0f0b32b086, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: -521841035205978306, guid: 842c196f03ac97d4290ad564233555e1, type: 2}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _OutlineTex:
+    - _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -71,77 +75,31 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Ambient: 0.5
-    - _Bevel: 0.5
-    - _BevelClamp: 0
-    - _BevelOffset: 0
-    - _BevelRoundness: 0
-    - _BevelWidth: 0
-    - _BumpFace: 0
-    - _BumpOutline: 0
-    - _ColorMask: 15
-    - _CullMode: 0
-    - _Diffuse: 0.5
-    - _FaceDilate: 0
-    - _FaceUVSpeedX: 0
-    - _FaceUVSpeedY: 0
-    - _GlowInner: 0.05
-    - _GlowOffset: 0
-    - _GlowOuter: 0.05
-    - _GlowPower: 0.75
-    - _GradientScale: 10
-    - _LightAngle: 3.1416
-    - _MaskSoftnessX: 0
-    - _MaskSoftnessY: 0
+    - _Amplitude: 0
+    - _BaseHeight: 0
+    - _CausticsScale: 0.5
+    - _CausticsSpeed: 1
+    - _EnableExternalAlpha: 0
     - _MaxHeight: 90
     - _MinHeight: -5
     - _NoiseScale: 10
     - _NoiseSpeed: 0.7
     - _NoiseStrength: 12
-    - _OutlineSoftness: 0
-    - _OutlineUVSpeedX: 0
-    - _OutlineUVSpeedY: 0
-    - _OutlineWidth: 0
-    - _PerspectiveFilter: 0.875
     - _PixelSize: 0.03
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Reflectivity: 10
-    - _ScaleRatioA: 0.9
-    - _ScaleRatioB: 0.73125
-    - _ScaleRatioC: 0.73125
-    - _ScaleX: 1
-    - _ScaleY: 1
-    - _ShaderFlags: 0
-    - _Sharpness: 0
-    - _SpecularPower: 2
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _TextureHeight: 1024
-    - _TextureWidth: 1024
-    - _UnderlayDilate: 0
-    - _UnderlayOffsetX: 0
-    - _UnderlayOffsetY: 0
-    - _UnderlaySoftness: 0
-    - _VertexOffsetX: 0
-    - _VertexOffsetY: 0
-    - _WeightBold: 0.75
-    - _WeightNormal: 0
+    - _TimeOffset: 0
+    - _WaveScale: 0
+    - _WaveSpeed: 0.2
+    - _ZWrite: 0
     m_Colors:
-    - _BottomColour: {r: 0.03137255, g: 0.12941176, b: 0.22352937, a: 1}
-    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
-    - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
-    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
-    - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}
-    - _MaskCoord: {r: 0, g: 0, b: 32767, a: 32767}
-    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ReflectFaceColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ReflectOutlineColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
-    - _TopColour: {r: 0.13273758, g: 0.4579037, b: 0.6830188, a: 1}
-    - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+    - _BottomColour: {r: 0.050980397, g: 0.15294118, b: 0.22352943, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 0}
+    - _ColourDeep: {r: 0.09411765, g: 0.20392157, b: 0.19607843, a: 0}
+    - _ColourShallow: {r: 0.18216442, g: 0.36009243, b: 0.4490565, a: 1}
+    - _FoamColour: {r: 0.6830188, g: 0.6830188, b: 0.6830188, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TopColour: {r: 0.050980397, g: 0.15294118, b: 0.22352943, a: 1}
+    - _WaterColour: {r: 0.09411765, g: 0.20392157, b: 0.25882354, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -8,8 +8,9 @@ public class TidalWave : MonoBehaviour
     [SerializeField] float heightIncrease; // How much the wave rises by, reduce this each level to make it look like you are ascending the wave (20, 13, 7, 3?)
     [SerializeField] float flattenAmount; // 0-1, how much to flatten the top edge by upon reaching the peak
     [SerializeField] AnimationCurve verticalSpeed; // Decrease as the wave rises, increase as it falls
-    [SerializeField] Transform cameraTransform;
-    [SerializeField] Transform foregroundWave;
+    [SerializeField] Transform cameraTransform, foregroundWave;
+    [SerializeField] PlayerController player;
+
     Wave wave;
     float timer, dormantTimer, startY, offsetY, lastOffsetY;
     bool isDormant = true;
@@ -87,7 +88,11 @@ public class TidalWave : MonoBehaviour
                 dormantTimer = 0f;
                 isDormant = false;
                 lastOffsetY = startY = transform.position.y - cameraTransform.position.y;
-                if (interactableWater != null) interactableWater.gameObject.SetActive(false);
+                if (interactableWater != null)
+                {
+                    interactableWater.gameObject.SetActive(false);
+                    player.underwater = false;
+                }
             }
             return;
         }

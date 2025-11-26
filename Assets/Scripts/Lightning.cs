@@ -33,8 +33,8 @@ public class LightningFlash : MonoBehaviour
 
             int distance = Random.Range(1, 3); // 1, 2 or 3
             yield return new WaitForSeconds(distance);
-            if (distance == 1) SoundManager.PlaySound(SoundManager.SoundType.THUNDERCLOSE);
-            else SoundManager.PlaySound(SoundManager.SoundType.THUNDERFAR);
+            if (distance == 1) AudioManager.PlaySound(AudioManager.SoundType.THUNDERCLOSE);
+            else AudioManager.PlaySound(AudioManager.SoundType.THUNDERFAR);
         }
     }
 

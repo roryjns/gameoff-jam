@@ -11,15 +11,12 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] float moveSpeed;
-    [SerializeField] float jumpForce, jumpBufferTime, coyoteTime, acceleration, deceleration;
-    public bool underwater;
+    [SerializeField] float jumpForce, jumpBufferTime, coyoteTime, acceleration, deceleration, groundCheckRadius;
+    [SerializeField] Transform groundCheck;
+    [SerializeField] LayerMask tilemapLayer;
+    [HideInInspector] public bool underwater;
     Vector2 moveInput;
     bool facingRight = true;
-
-    [Header("Jumping")]
-    [SerializeField] Transform groundCheck;
-    [SerializeField] float groundCheckRadius;
-    [SerializeField] LayerMask tilemapLayer;
     bool isGrounded;
     float jumpBufferCounter, coyoteTimeCounter;
 
@@ -31,9 +28,9 @@ public class PlayerController : MonoBehaviour
     [Header("Attacking")]
     [SerializeField] Weapon weapon;
     [SerializeField] float maxHeavyChargeTime;
+    [HideInInspector] public int currentComboStep;
     float heavyChargeTime;
     bool isChargingHeavy;
-    [HideInInspector] public int currentComboStep;
     bool comboQueued;
 
     [System.Serializable]
@@ -47,6 +44,10 @@ public class PlayerController : MonoBehaviour
     [Header("Attack Hitboxes")]
     [SerializeField] HitboxSettings light1;
     [SerializeField] HitboxSettings light2, light3, heavy;
+
+    [Header("Underwater")]
+    [SerializeField] float underwaterGravityScale;
+    [SerializeField] float moveMultiplier, jumpForceMultiplier;
 
     private void Awake()
     {
@@ -101,7 +102,9 @@ public class PlayerController : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, tilemapLayer);
         animator.SetBool("Grounded", isGrounded);
         float targetVelocity = moveInput.x * moveSpeed;
+        if (underwater) targetVelocity *= moveMultiplier;
         animator.SetBool("Moving", Mathf.Abs(targetVelocity) > 0.1);
+        rb.gravityScale = underwater ? underwaterGravityScale : 1f;
 
         if (isGrounded && rb.linearVelocity.y > 0f) rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // Prevent unintended bouncing
 
@@ -123,12 +126,14 @@ public class PlayerController : MonoBehaviour
 
         // Horizontal movement
         float accelRate = (Mathf.Abs(targetVelocity) > 0.01f) ? acceleration : deceleration;
+        if (underwater) accelRate *= 0.5f;
         rb.linearVelocityX = Mathf.MoveTowards(rb.linearVelocityX, targetVelocity, accelRate * Time.fixedDeltaTime);
 
         // Jumping
         if (jumpBufferCounter > 0f && coyoteTimeCounter > 0f)
         {
             rb.linearVelocityY = jumpForce;
+            if (underwater) rb.linearVelocityY = jumpForce * jumpForceMultiplier;
             jumpBufferCounter = coyoteTimeCounter = 0f;
         }
 
@@ -168,7 +173,7 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = 0; 
         rb.linearVelocity = new Vector2(transform.localScale.x * dashPower, 0f); 
         trailRenderer.emitting = true;
-        SoundManager.PlaySound(SoundManager.SoundType.DASH);
+        AudioManager.PlaySound(AudioManager.SoundType.DASH);
         yield return new WaitForSeconds(dashDuration); 
         trailRenderer.emitting = false; 
         rb.gravityScale = originalGravity; 

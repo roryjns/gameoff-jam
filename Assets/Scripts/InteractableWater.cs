@@ -1,24 +1,18 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class WaterSplash : MonoBehaviour
+public class InteractableWater : MonoBehaviour
 {
-    [Header("Springs")]
     [SerializeField] int wavePropagationIterations;
-    [SerializeField] float springConstant, damping, spread;
-    [SerializeField] float forceMultiplier;
-    [SerializeField] float maxForce;
-    [SerializeField] float playerCollisionRadiusMultiplier;
-    [SerializeField] float waterLevel; // y level of the water's surface
+    [SerializeField] float springConstant, damping, spread, forceMultiplier, maxForce;
+    [SerializeField] LayerMask waterMask;
 
     Mesh mesh;
     Wave wave;
+    EdgeCollider2D edgeCollider;
     int[] topVerticesIndex;
     Vector3[] vertices;
     float[] splashOffset;  // length = topVerticesIndex.Length
-
-    [SerializeField] LayerMask waterMask;
-    EdgeCollider2D edgeCollider;
 
     public static WaterSplash Instance;
 
@@ -97,18 +91,13 @@ public class WaterSplash : MonoBehaviour
     private void UpdateCollider()
     {
         Vector2[] colliderPoints = new Vector2[topVerticesIndex.Length];
-
-        for (int i = 0; i < topVerticesIndex.Length; i++)
-        {
-            colliderPoints[i] = (Vector2)vertices[topVerticesIndex[i]];
-        }
-
+        for (int i = 0; i < topVerticesIndex.Length; i++) colliderPoints[i] = (Vector2)vertices[topVerticesIndex[i]];
         edgeCollider.points = colliderPoints;
     }
 
     private void Splash(Collider2D collision, float force)
     {
-        float radius = collision.bounds.extents.x * playerCollisionRadiusMultiplier;
+        float radius = collision.bounds.extents.x * 4f;
         Vector2 center = collision.transform.position;
 
         for (int i = 0; i < waterPoints.Count; i++)
@@ -124,27 +113,50 @@ public class WaterSplash : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if ((waterMask.value & (1 << collision.gameObject.layer)) > 0)
+        if ((waterMask.value & (1 << collision.gameObject.layer)) == 0) return;
+        if (!collision.TryGetComponent<Rigidbody2D>(out var rb)) return;
+
+        Vector3 spawnPos;
+
+        if (collision.bounds.center.y >= edgeCollider.points[1].y + edgeCollider.offset.y + gameObject.transform.localPosition.y) 
         {
-            if (collision.TryGetComponent<Rigidbody2D>(out var rb))
+            // Hit from above, now underwater
+            spawnPos = new Vector2(collision.transform.position.x, collision.bounds.min.y);
+            if (collision.gameObject.TryGetComponent<PlayerController>(out var player)) player.underwater = true;
+            else if (collision.gameObject.TryGetComponent<Enemy>(out var enemy))
             {
-                // Spawn particles
-                Vector3 spawnPos;
-
-                if (collision.transform.position.y >= edgeCollider.points[1].y + edgeCollider.offset.y + gameObject.transform.localPosition.y)
-                    spawnPos = (Vector2)collision.transform.position - new Vector2(0f, collision.bounds.extents.y); // Hit from above
-                else
-                    spawnPos = (Vector2)collision.transform.position + new Vector2(0f, collision.bounds.extents.y); // Hit from below
-
-                ObjectPooler.Instance.GetFromPool("Splash Particle", spawnPos, Quaternion.identity);
-
-                // Apply a force to the springs
-                float velocity = rb.linearVelocity.y * forceMultiplier;
-                velocity = Mathf.Clamp(Mathf.Abs(velocity), 0f, maxForce);
-                float multiplier = rb.linearVelocity.y >= 0 ? 1 : -1;
-                velocity *= multiplier;
-                Splash(collision, velocity);
+                enemy.underwater = true;
+                enemy.Heal();
             }
+        }
+        else
+        {
+            // Hit from below, now above water
+            spawnPos = new Vector2(collision.transform.position.x, collision.bounds.max.y);            
+        }
+
+        ObjectPooler.Instance.GetFromPool("Splash Particle", spawnPos, Quaternion.identity);
+        float vel = Mathf.Clamp(Mathf.Abs(rb.linearVelocity.y), 0f, maxForce);
+        vel *= rb.linearVelocity.y >= 0 ? 1 : -1;
+        Splash(collision, vel);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.TryGetComponent<PlayerController>(out var player))
+        {
+            if (collision.bounds.center.y >= edgeCollider.points[1].y + edgeCollider.offset.y + gameObject.transform.localPosition.y)
+                player.underwater = false;
+            else
+                player.underwater = true;
+        }
+
+        else if (collision.gameObject.TryGetComponent<Enemy>(out var enemy))
+        {
+            if (collision.bounds.center.y >= edgeCollider.points[1].y + edgeCollider.offset.y + gameObject.transform.localPosition.y)
+                enemy.underwater = false;
+            else
+                enemy.underwater = true;
         }
     }
 }

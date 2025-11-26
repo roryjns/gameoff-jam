@@ -1,12 +1,34 @@
 using UnityEngine;
+using UnityEngine.Audio;
 using System.Collections.Generic;
 
-public class SoundManager : MonoBehaviour
+public class AudioManager : MonoBehaviour
 {
-    private static SoundManager Instance;
-    Dictionary<SoundType, SoundEntry> soundMap;
     [SerializeField] List<SoundEntry> sounds;
     [SerializeField] AudioSource sfxSource;
+    [SerializeField] AudioMixer mixer;
+    [SerializeField] PlayerController player;
+
+    private static AudioManager Instance;
+    Dictionary<SoundType, SoundEntry> soundMap;
+    private readonly float normalCutoff = 22000f, underwaterCutoff = 1200f;
+
+    private void Update()
+    {
+        float target = player.underwater ? underwaterCutoff : normalCutoff;
+
+        mixer.SetFloat("MusicLPF", Mathf.Lerp(
+            GetCurrentLPF("MusicLPF"), target, Time.deltaTime * 5f));
+
+        mixer.SetFloat("SfxLPF", Mathf.Lerp(
+            GetCurrentLPF("SfxLPF"), target, Time.deltaTime * 5f));
+    }
+
+    private float GetCurrentLPF(string param)
+    {
+        mixer.GetFloat(param, out float value);
+        return value;
+    }
 
     [System.Serializable]
     public struct SoundEntry
