@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class TidalWave : MonoBehaviour
@@ -17,6 +18,17 @@ public class TidalWave : MonoBehaviour
     [SerializeField] Transform interactableWater;  // Your water object that can rise
     [SerializeField] float interactableRiseHeight;
     float interactableStartHeight, riseDuration, holdDuration, fallDuration;
+
+    internal event EventHandler OnWaveCrash;
+    internal static TidalWave Instance;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
 
     private void Start()
     {
@@ -102,7 +114,7 @@ public class TidalWave : MonoBehaviour
         if (offsetY < lastOffsetY)
         {
             if (!foregroundWave.gameObject.activeSelf) foregroundWave.gameObject.SetActive(true);
-            else 
+            else
             {
                 float deltaY = lastOffsetY - offsetY;
                 foregroundWave.position += Vector3.down * deltaY;
@@ -118,6 +130,7 @@ public class TidalWave : MonoBehaviour
             isDormant = true;
             if (interactableWater != null) interactableWater.gameObject.SetActive(true);
             dormantTimer = 0f;
+            OnWaveCrash?.Invoke(this, null);
 
             if (foregroundWave.gameObject.activeSelf)
             {

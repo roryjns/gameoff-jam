@@ -269,7 +269,6 @@ public class LevelGenerator : MonoBehaviour
         chunk.OpenTopLeftRoof();
         GetChunk(chunk.X, chunk.Y - 1, chunk.Level).OpenBottomLeftFloor();
     }
-
     internal Chunk GetChunkFromPosition(Vector3 position)
     {
         Vector3 cellPos = transform.position - new Vector3(position.x, position.y);

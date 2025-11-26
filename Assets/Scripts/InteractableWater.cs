@@ -14,12 +14,19 @@ public class InteractableWater : MonoBehaviour
     Vector3[] vertices;
     float[] splashOffset;  // length = topVerticesIndex.Length
 
+    public static WaterSplash Instance;
+
     private class WaterPoint
     {
         public float velocity, pos, targetHeight;
     }
 
     private readonly List<WaterPoint> waterPoints = new();
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {

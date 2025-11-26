@@ -5,7 +5,6 @@ public class DistantChunksDisabler : MonoBehaviour
     Chunk currentChunk = null;
     void Update()
     {
-
         LevelGenerator lg = LevelGenerator.Instance;
         if (currentChunk == null)
         {

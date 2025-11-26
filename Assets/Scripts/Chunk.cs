@@ -37,7 +37,6 @@ public class Chunk : MonoBehaviour
     }
 
     const int openingSize = 7;
-
     internal void OpenTopLeftRoof()
     {
         for (int i = 1; i < openingSize; i++)

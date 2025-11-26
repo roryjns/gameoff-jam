@@ -32,7 +32,7 @@ public class ChunkRequirements : ScriptableObject, IRequirement
     {
         switch (Type)
         {
-            case ChunkRequirementType.ChunkCanOpenTopLeftCeiling: // Open top left ceiling;
+            case ChunkRequirementType.ChunkCanOpenTopLeftCeiling:
                 Chunk chunk = Chunk.GetChunkFromGameObject(gameObject);
                 LevelGenerator.Instance.OpenTopLeftRoof(chunk);
                 break;
