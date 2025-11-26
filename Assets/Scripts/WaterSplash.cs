@@ -20,12 +20,19 @@ public class WaterSplash : MonoBehaviour
     [SerializeField] LayerMask waterMask;
     EdgeCollider2D edgeCollider;
 
+    public static WaterSplash Instance;
+
     private class WaterPoint
     {
         public float velocity, pos, targetHeight;
     }
 
     private readonly List<WaterPoint> waterPoints = new();
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
