@@ -1,74 +1,97 @@
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class PauseMenu : MonoBehaviour
 {
-    public static bool IsPaused { get; private set; }
-    public GameObject Controls;
-    public GameObject ContinueButton;
-    GameObject currentActive = null;
-    void Start()
+    [SerializeField] GameObject pauseMenu, optionsMenu, pauseMenuFirst, optionsMenuFirst;
+    [SerializeField] Slider controllerDeadzoneSlider, musicSlider, sfxSlider;
+    [SerializeField] AudioMixer audioMixer;
+    [SerializeField] Volume volume;
+    DepthOfField dof;
+    bool isPaused = false;
+
+    private void Start()
     {
-        DontDestroyOnLoad(gameObject);
-        TogglePaused(IsMainMenu());
+        controllerDeadzoneSlider.value = PlayerPrefs.GetFloat("ControllerDeadzone", 0.1f) / 0.05f;
+        sfxSlider.value = PlayerPrefs.GetFloat("SfxVolume", 1) / 0.1f;
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1) / 0.1f;
+        volume.profile.TryGet(out dof);
+        ApplyOptions();
     }
 
-    void Update()
+    public void OnTogglePause(InputAction.CallbackContext context)
     {
-        if (InputSystem.actions["Pause Menu"].WasPressedThisFrame())
+        TogglePause();
+    }
+
+    public void OnMenuClose(InputAction.CallbackContext context)
+    {
+        MenuClose();
+    }
+
+    public void TogglePause()
+    {
+        isPaused = !isPaused;
+        pauseMenu.SetActive(isPaused);
+        Time.timeScale = isPaused ? 0 : 1;
+
+        //if (isPaused) AudioManager.PlaySound(AudioManager.SoundType.UICONFIRM);
+        //else AudioManager.PlaySound(AudioManager.SoundType.UIBACK);
+
+        if (isPaused && pauseMenuFirst != null)
         {
-            if (IsMainMenu())
-            {
-                // No hiding pause on Main Menu
-                return;
-            }
-            TogglePaused();
+            dof.active = true;
+            dof.focusDistance.value = 1f;
+            PlayerController.Instance.playerInput.SwitchCurrentActionMap("UI");
+            EventSystem.current.SetSelectedGameObject(pauseMenuFirst);
+        }
+        else
+        {
+            dof.active = false;
+            dof.focusDistance.value = 10f;
+            PlayerController.Instance.playerInput.SwitchCurrentActionMap("Player");
+            EventSystem.current.SetSelectedGameObject(null);
         }
     }
 
-    public bool IsMainMenu()
+    public void MenuClose()
     {
-        return UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MainMenu";
+        if (pauseMenu.activeSelf) TogglePause();
+        else if (optionsMenu.activeSelf)
+        {
+            optionsMenu.SetActive(false);
+            pauseMenu.SetActive(true);
+            //AudioManager.PlaySound(AudioManager.SoundType.UIBACK);
+            EventSystem.current.SetSelectedGameObject(pauseMenuFirst);
+        }
     }
 
-    public void TogglePaused(bool? forceTo = null)
+    public void OpenOptions()
     {
-        IsPaused = forceTo.GetValueOrDefault(!IsPaused);
-        foreach (Transform t in transform)
-        {
-            t.gameObject.SetActive(IsPaused);
-        }
-        float oneIfNotPaused = IsPaused ? 0.0f : 1.0f;
-        Time.timeScale = oneIfNotPaused;
-        if (currentActive != null)
-        {
-            currentActive.SetActive(false);
-        }
-        ContinueButton.SetActive(IsMainMenu());
+        pauseMenu.SetActive(false);
+        optionsMenu.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(optionsMenuFirst);
+        //AudioManager.PlaySound(AudioManager.SoundType.UICONFIRM);
     }
 
-    public void ResumeGame()
+    public void UpdateOptions()
     {
-        TogglePaused(false);
+        PlayerPrefs.SetFloat("ControllerDeadzone", controllerDeadzoneSlider.value * 0.05f); // Maps 0-10 to 0 to 0.5
+        PlayerPrefs.SetFloat("SfxVolume", sfxSlider.value * 0.1f);
+        PlayerPrefs.SetFloat("MusicVolume", musicSlider.value * 0.1f);
+        //AudioManager.PlaySound(AudioManager.SoundType.UICONFIRM);
+        ApplyOptions();
     }
-    public void PauseGame()
+
+    private void ApplyOptions()
     {
-        TogglePaused(true);
-    }
-    public void ShowControls()
-    {
-        if (currentActive != null)
-        {
-            currentActive.SetActive(false);
-        }
-        Controls.SetActive(true);
-        currentActive = Controls;
-    }
-    public void NewGame()
-    {
-        SceneManager.LoadScene("Prototype");
-        TogglePaused(false);
+        PlayerController.Instance.controllerDeadzone = PlayerPrefs.GetFloat("ControllerDeadzone", 0.1f);
+        audioMixer.SetFloat("SfxVolume", Mathf.Log10(Mathf.Clamp(sfxSlider.value * 0.1f, 0.0001f, 1f)) * 20);
+        audioMixer.SetFloat("MusicVolume", Mathf.Log10(Mathf.Clamp(musicSlider.value * 0.1f, 0.0001f, 1f)) * 20);
     }
 }

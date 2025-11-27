@@ -9,7 +9,11 @@ public class Orbs : MonoBehaviour
     private void Awake()
     {
         ps = GetComponent<ParticleSystem>();
-        ps.trigger.SetCollider(0, PlayerController.Instance.gameObject.GetComponent<Collider2D>());
+    }
+
+    private void Start()
+    {
+        if (PlayerController.Instance) ps.trigger.SetCollider(0, PlayerController.Instance.GetComponent<Collider2D>());
     }
 
     public void SetOrbCount(int count)

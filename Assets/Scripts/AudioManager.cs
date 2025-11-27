@@ -7,7 +7,6 @@ public class AudioManager : MonoBehaviour
     [SerializeField] List<SoundEntry> sounds;
     [SerializeField] AudioSource sfxSource;
     [SerializeField] AudioMixer mixer;
-    [SerializeField] PlayerController player;
 
     private static AudioManager Instance;
     Dictionary<SoundType, SoundEntry> soundMap;
@@ -15,7 +14,7 @@ public class AudioManager : MonoBehaviour
 
     private void Update()
     {
-        float target = player.underwater ? underwaterCutoff : normalCutoff;
+        float target = PlayerController.Instance.underwater ? underwaterCutoff : normalCutoff;
 
         mixer.SetFloat("MusicLPF", Mathf.Lerp(
             GetCurrentLPF("MusicLPF"), target, Time.deltaTime * 5f));
@@ -35,7 +34,7 @@ public class AudioManager : MonoBehaviour
     {
         public SoundType type;
         public AudioClip clip;
-        [Range(0f, 2f)] public float defaultVolume;
+        [Range(0f, 1f)] public float defaultVolume;
     }
 
     public enum SoundType
@@ -53,11 +52,7 @@ public class AudioManager : MonoBehaviour
     {
         Instance = this;
         soundMap = new Dictionary<SoundType, SoundEntry>();
-
-        foreach (var entry in sounds)
-        {
-            soundMap[entry.type] = entry;
-        }
+        foreach (var entry in sounds) soundMap[entry.type] = entry;
     }
 
     public static void PlaySound(SoundType type)

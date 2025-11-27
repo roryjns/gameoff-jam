@@ -7,6 +7,7 @@ public class Wave : MonoBehaviour
     [HideInInspector] public float amplitudeMultiplier;
     [HideInInspector] public Vector3[] baseVertices;
     [HideInInspector] public int[] topVerticesIndex;
+
     Mesh mesh;
     float phaseOffset, frequency1, frequency2, frequency3;
     float noiseOffsetX, noiseOffsetT, chaosOffsetX, chaosOffsetT, speedMultiplier;

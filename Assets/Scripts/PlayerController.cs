@@ -5,12 +5,14 @@ using System.Collections;
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
-    public static PlayerInput playerInput;
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Animator animator;
+    [SerializeField] PauseMenu pauseMenu;
+    [HideInInspector] public PlayerInput playerInput;
 
     [Header("Movement")]
     [SerializeField] float moveSpeed;
+    [HideInInspector] public float controllerDeadzone;
     [SerializeField] float jumpForce, jumpBufferTime, coyoteTime, acceleration, deceleration, groundCheckRadius;
     [SerializeField] Transform groundCheck;
     [SerializeField] LayerMask tilemapLayer;
@@ -27,8 +29,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Health")]
     [SerializeField] HealthBar healthBar;
-    [SerializeField] int currentHealth;
-    [SerializeField] int maxHealth;
+    [SerializeField] int currentHealth, maxHealth;
 
     [Header("Attacking")]
     [SerializeField] Weapon weapon;
@@ -62,7 +63,7 @@ public class PlayerController : MonoBehaviour
             playerInput = gameObject.GetComponent<PlayerInput>();
         }
         else
-            Destroy(this);
+            Destroy(gameObject);
     }
 
     private void OnEnable()
@@ -72,6 +73,8 @@ public class PlayerController : MonoBehaviour
         playerInput.actions["Light Attack"].started += OnLightAttack;
         playerInput.actions["Heavy Attack"].started += OnHeavyAttackBegin;
         playerInput.actions["Heavy Attack"].canceled += OnHeavyAttackRelease;
+        playerInput.actions["Pause"].performed += pauseMenu.OnTogglePause;
+        playerInput.actions["Cancel"].performed += pauseMenu.OnMenuClose;
     }
 
     private void OnDisable() 
@@ -81,6 +84,8 @@ public class PlayerController : MonoBehaviour
         playerInput.actions["Light Attack"].started -= OnLightAttack;
         playerInput.actions["Heavy Attack"].started -= OnHeavyAttackBegin;
         playerInput.actions["Heavy Attack"].canceled -= OnHeavyAttackRelease;
+        playerInput.actions["Pause"].performed -= pauseMenu.OnTogglePause;
+        playerInput.actions["Cancel"].performed -= pauseMenu.OnMenuClose;
     }
 
     private void Start()
@@ -113,9 +118,22 @@ public class PlayerController : MonoBehaviour
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, tilemapLayer);
         animator.SetBool("Grounded", isGrounded);
-        float targetVelocity = moveInput.x * moveSpeed;
+
+        float targetVelocity;
+        bool isUsingGamepad = playerInput.currentControlScheme == "Gamepad";
+        if ((isUsingGamepad && moveInput.sqrMagnitude > controllerDeadzone * controllerDeadzone) || (!isUsingGamepad && moveInput.sqrMagnitude > 0.001f))
+        {
+            targetVelocity = moveInput.x * moveSpeed;
+            animator.SetBool("Moving", true);
+        }
+        else
+        {
+            targetVelocity = 0;
+            animator.SetBool("Moving", false);
+        }
+
         if (underwater) targetVelocity *= moveMultiplier;
-        animator.SetBool("Moving", Mathf.Abs(targetVelocity) > 0.1);
+
         rb.gravityScale = underwater ? underwaterGravityScale : 1f;
 
         if (isGrounded && rb.linearVelocity.y > 0f) rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // Prevent unintended bouncing
@@ -283,14 +301,15 @@ public class PlayerController : MonoBehaviour
         {
             currentHealth = 0;
             GameManager.Instance.runData.currentHealth = currentHealth;
-            Die();
+            animator.SetTrigger("Death");
+            StartCoroutine(GameManager.Instance.OnPlayerDeath());
         }
         healthBar.UpdateHealth(currentHealth);
     }
 
-    private void Die()
+    private void OnDestroy()
     {
-        animator.SetTrigger("Death");
-        StartCoroutine(GameManager.Instance.OnPlayerDeath());
+        if (Instance == this)
+            Instance = null;
     }
 }

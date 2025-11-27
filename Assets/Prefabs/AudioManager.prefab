@@ -47,7 +47,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 95108a9ff05b86240a4f794b0d1d71c7, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -144,7 +144,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.8
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -263,3 +263,4 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 885cc22ccc85a584b93d7b2d448522dd, type: 3}
     defaultVolume: 1
   sfxSource: {fileID: 2954744814264344927}
+  mixer: {fileID: 24100000, guid: 3bc77082183d0d14597036f50d7e9f5c, type: 2}

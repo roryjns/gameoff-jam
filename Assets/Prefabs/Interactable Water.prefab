@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4823643115694389241}
   - component: {fileID: 5199298599402214831}
   - component: {fileID: 4042853646075536957}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Interactable Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,7 +164,7 @@ MonoBehaviour:
   seed: 4
   width: 100
   height: 15
-  amplitude: 0.2
+  amplitude: 0.3
   amplitudeMultiplier: 0
   baseVertices: []
   topVerticesIndex: 
@@ -188,4 +188,4 @@ MonoBehaviour:
   maxForce: 4
   waterMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 65

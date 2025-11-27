@@ -13,6 +13,7 @@ public class Floats : MonoBehaviour
     public float VerticalOffset = 0;
     private EdgeCollider2D edge;
     System.Collections.Generic.List<Vector2> edgePoints = new();
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -25,13 +26,13 @@ public class Floats : MonoBehaviour
 
     private void DoFloat()
     {
-        if (WaterSplash.Instance == null || !WaterSplash.Instance.isActiveAndEnabled)
+        if (InteractableWater.Instance == null || !InteractableWater.Instance.isActiveAndEnabled)
         {
             return;
         }
         if (edge == null)
         {
-            WaterSplash wave = WaterSplash.Instance;
+            InteractableWater wave = InteractableWater.Instance;
             edge = wave.GetComponent<EdgeCollider2D>();
         }
         edge.GetPoints(edgePoints);

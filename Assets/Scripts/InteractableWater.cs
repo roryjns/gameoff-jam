@@ -14,7 +14,7 @@ public class InteractableWater : MonoBehaviour
     Vector3[] vertices;
     float[] splashOffset;  // length = topVerticesIndex.Length
 
-    public static WaterSplash Instance;
+    public static InteractableWater Instance;
 
     private class WaterPoint
     {
