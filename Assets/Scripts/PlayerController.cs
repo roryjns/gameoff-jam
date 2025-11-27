@@ -23,8 +23,8 @@ public class PlayerController : MonoBehaviour
     float jumpBufferCounter, coyoteTimeCounter;
 
     [Header("Dashing")]
-    [SerializeField] TrailRenderer trailRenderer;
-    [SerializeField] float dashPower, dashDuration, dashCooldown;
+    [SerializeField] float dashPower;
+    [SerializeField] float dashDuration, dashCooldown;
     bool canDash = true, isDashing = false, hasAirDashed = false;
 
     [Header("Health")]
@@ -180,7 +180,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDash(InputAction.CallbackContext context)
     {
-        if (!canDash || isDashing) return;
+        if (!canDash || isDashing || currentComboStep != 0) return;
 
         if (isGrounded || !hasAirDashed)
         {
@@ -195,17 +195,22 @@ public class PlayerController : MonoBehaviour
         canDash = false; 
         isDashing = true;
         animator.SetBool("Dashing", true);
-        currentComboStep = 0;
         animator.SetInteger("ComboStep", currentComboStep);
         isChargingHeavy = false;
         heavyChargeTime = 0f;
         float originalGravity = rb.gravityScale; 
         rb.gravityScale = 0; 
-        rb.linearVelocity = new Vector2(transform.localScale.x * dashPower, 0f); 
-        trailRenderer.emitting = true;
+
+        float timer = 0f;
+        while (timer < dashDuration)
+        {
+            rb.linearVelocity = new Vector2(transform.localScale.x * dashPower, 0f);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
         AudioManager.PlaySound(AudioManager.SoundType.DASH);
         yield return new WaitForSeconds(dashDuration); 
-        trailRenderer.emitting = false; 
         rb.gravityScale = originalGravity; 
         isDashing = false;
         animator.SetBool("Dashing", false);

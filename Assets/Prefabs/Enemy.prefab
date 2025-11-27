@@ -184,7 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 361be55702d7bce4e9008c7b20c2dd95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  health: 30
-  maxHealth: 30
+  health: 10
+  maxHealth: 10
   baseOrbsDropped: 5
   underwater: 0

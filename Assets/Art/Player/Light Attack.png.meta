@@ -222,7 +222,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1403
-        y: 51
+        y: 50
         width: 92
         height: 72
       alignment: 9
@@ -353,12 +353,12 @@ TextureImporter:
       name: Light Attack 2 2
       rect:
         serializedVersion: 2
-        x: 798
-        y: 51
-        width: 65
-        height: 37
+        x: 797
+        y: 50
+        width: 66
+        height: 38
       alignment: 9
-      pivot: {x: 0.32307693, y: 0}
+      pivot: {x: 0.3181818, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -398,7 +398,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1695
-        y: 52
+        y: 50
         width: 92
         height: 46
       alignment: 9

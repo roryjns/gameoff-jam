@@ -3120,6 +3120,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7943248423939905372, guid: 2812ef76c7566fe4da191640d8e8bbc7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8176068094872489885, guid: 2812ef76c7566fe4da191640d8e8bbc7, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -3330,6 +3334,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5679208694180723848, guid: 0e5fabfc28fc42e4d841b865b4db121e, type: 3}
+      propertyPath: dashPower
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5679208694180723848, guid: 0e5fabfc28fc42e4d841b865b4db121e, type: 3}
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 2123480457}
@@ -3341,6 +3349,14 @@ PrefabInstance:
       propertyPath: pauseMenu
       value: 
       objectReference: {fileID: 9673594}
+    - target: {fileID: 5679208694180723848, guid: 0e5fabfc28fc42e4d841b865b4db121e, type: 3}
+      propertyPath: coyoteTime
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5679208694180723848, guid: 0e5fabfc28fc42e4d841b865b4db121e, type: 3}
+      propertyPath: dashDuration
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 5679208694180723848, guid: 0e5fabfc28fc42e4d841b865b4db121e, type: 3}
       propertyPath: currentHealth
       value: 4
@@ -3398,7 +3414,8 @@ PrefabInstance:
       value: -0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4049425225431093831, guid: 0e5fabfc28fc42e4d841b865b4db121e, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 788182121844592058, guid: 0e5fabfc28fc42e4d841b865b4db121e, type: 3}
       insertIndex: -1
