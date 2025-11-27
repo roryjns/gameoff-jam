@@ -44,6 +44,9 @@ public class AudioManager : MonoBehaviour
         WALK,
         JUMP,
         DASH,
+        LIGHTATTACK1,
+        LIGHTATTACK2,
+        LIGHTATTACK3,
         THUNDERCLOSE,
         THUNDERFAR,
     }

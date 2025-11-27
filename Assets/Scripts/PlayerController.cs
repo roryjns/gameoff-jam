@@ -165,6 +165,7 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocityY = jumpForce;
             if (underwater) rb.linearVelocityY = jumpForce * jumpForceMultiplier;
             jumpBufferCounter = coyoteTimeCounter = 0f;
+            AudioManager.PlaySound(AudioManager.SoundType.JUMP);
         }
 
         animator.SetFloat("VerticalSpeed", rb.linearVelocityY);
@@ -231,6 +232,7 @@ public class PlayerController : MonoBehaviour
         currentComboStep = 1;
         animator.SetInteger("ComboStep", currentComboStep);
         animator.SetTrigger("LightAttack");
+        AudioManager.PlaySound(AudioManager.SoundType.LIGHTATTACK1);
     }
 
     public void CheckComboContinue()
@@ -242,6 +244,14 @@ public class PlayerController : MonoBehaviour
             if (currentComboStep > 3) currentComboStep = 1;
             animator.SetInteger("ComboStep", currentComboStep);
             animator.SetTrigger("LightAttack");
+            
+            // Play appropriate attack sound
+            if (currentComboStep == 1)
+                AudioManager.PlaySound(AudioManager.SoundType.LIGHTATTACK1);
+            else if (currentComboStep == 2)
+                AudioManager.PlaySound(AudioManager.SoundType.LIGHTATTACK2);
+            else if (currentComboStep == 3)
+                AudioManager.PlaySound(AudioManager.SoundType.LIGHTATTACK3);
         }
         else
         {
