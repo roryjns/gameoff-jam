@@ -47,6 +47,8 @@ public class AudioManager : MonoBehaviour
         LIGHTATTACK1,
         LIGHTATTACK2,
         LIGHTATTACK3,
+        WATERENTER,
+        WATEREXIT,
         THUNDERCLOSE,
         THUNDERFAR,
     }

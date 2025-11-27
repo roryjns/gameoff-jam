@@ -136,6 +136,7 @@ public class InteractableWater : MonoBehaviour
         }
 
         ObjectPooler.Instance.GetFromPool("Splash Particle", spawnPos, Quaternion.identity);
+        AudioManager.PlaySound(AudioManager.SoundType.WATERENTER);
         float vel = Mathf.Clamp(Mathf.Abs(rb.linearVelocity.y), 0f, maxForce);
         vel *= rb.linearVelocity.y >= 0 ? 1 : -1;
         Splash(collision, vel);
@@ -146,7 +147,10 @@ public class InteractableWater : MonoBehaviour
         if (collision.gameObject.TryGetComponent<PlayerController>(out var player))
         {
             if (collision.bounds.center.y >= edgeCollider.points[1].y + edgeCollider.offset.y + gameObject.transform.localPosition.y)
+            {
                 player.underwater = false;
+                AudioManager.PlaySound(AudioManager.SoundType.WATEREXIT);
+            }
             else
                 player.underwater = true;
         }
@@ -154,7 +158,10 @@ public class InteractableWater : MonoBehaviour
         else if (collision.gameObject.TryGetComponent<Enemy>(out var enemy))
         {
             if (collision.bounds.center.y >= edgeCollider.points[1].y + edgeCollider.offset.y + gameObject.transform.localPosition.y)
+            {
                 enemy.underwater = false;
+                AudioManager.PlaySound(AudioManager.SoundType.WATEREXIT);
+            }
             else
                 enemy.underwater = true;
         }
