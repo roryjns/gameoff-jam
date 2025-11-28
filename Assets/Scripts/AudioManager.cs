@@ -10,6 +10,7 @@ public class AudioManager : MonoBehaviour
 
     private static AudioManager Instance;
     Dictionary<SoundType, SoundEntry> soundMap;
+    Dictionary<SoundType, int> lastClipIndex;
     private readonly float normalCutoff = 22000f, underwaterCutoff = 1200f;
 
     private void Update()
@@ -34,6 +35,7 @@ public class AudioManager : MonoBehaviour
     {
         public SoundType type;
         public AudioClip clip;
+        public AudioClip[] clips;
         [Range(0f, 1f)] public float defaultVolume;
     }
 
@@ -49,6 +51,7 @@ public class AudioManager : MonoBehaviour
         LIGHTATTACK3,
         WATERENTER,
         WATEREXIT,
+        ORBPICKUP,
         THUNDERCLOSE,
         THUNDERFAR,
     }
@@ -57,7 +60,12 @@ public class AudioManager : MonoBehaviour
     {
         Instance = this;
         soundMap = new Dictionary<SoundType, SoundEntry>();
-        foreach (var entry in sounds) soundMap[entry.type] = entry;
+        lastClipIndex = new Dictionary<SoundType, int>();
+        foreach (var entry in sounds)
+        {
+            soundMap[entry.type] = entry;
+            lastClipIndex[entry.type] = -1;
+        }
     }
 
     public static void PlaySound(SoundType type)
@@ -70,7 +78,30 @@ public class AudioManager : MonoBehaviour
             type == SoundType.UICONFIRM || type == SoundType.UIBACK;
 
         float finalVolume = sound.defaultVolume;
-        Instance.sfxSource.PlayOneShot(sound.clip, finalVolume);
+        
+        // Use clips array if available, otherwise fall back to single clip
+        AudioClip clipToPlay = sound.clip;
+        if (sound.clips != null && sound.clips.Length > 0)
+        {
+            int clipIndex;
+            if (sound.clips.Length > 1)
+            {
+                // Pick a different clip than last time
+                do
+                {
+                    clipIndex = Random.Range(0, sound.clips.Length);
+                } while (clipIndex == Instance.lastClipIndex[type]);
+                Instance.lastClipIndex[type] = clipIndex;
+            }
+            else
+            {
+                clipIndex = 0;
+            }
+            clipToPlay = sound.clips[clipIndex];
+        }
+        
+        if (clipToPlay == null) return;
+        Instance.sfxSource.PlayOneShot(clipToPlay, finalVolume);
     }
 
     public static void PlaySound(SoundType type, AudioSource source)
@@ -79,6 +110,29 @@ public class AudioManager : MonoBehaviour
 
         var sound = Instance.soundMap[type];
         float finalVolume = sound.defaultVolume;
-        source.PlayOneShot(sound.clip, finalVolume);
+        
+        // Use clips array if available, otherwise fall back to single clip
+        AudioClip clipToPlay = sound.clip;
+        if (sound.clips != null && sound.clips.Length > 0)
+        {
+            int clipIndex;
+            if (sound.clips.Length > 1)
+            {
+                // Pick a different clip than last time
+                do
+                {
+                    clipIndex = Random.Range(0, sound.clips.Length);
+                } while (clipIndex == Instance.lastClipIndex[type]);
+                Instance.lastClipIndex[type] = clipIndex;
+            }
+            else
+            {
+                clipIndex = 0;
+            }
+            clipToPlay = sound.clips[clipIndex];
+        }
+        
+        if (clipToPlay == null) return;
+        source.PlayOneShot(clipToPlay, finalVolume);
     }
 }

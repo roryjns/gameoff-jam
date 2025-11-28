@@ -26,6 +26,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float dashDuration, dashCooldown;
     bool canDash = true, isDashing = false, hasAirDashed = false;
 
+    [Header("Audio")]
+    [SerializeField] float footstepInterval = 0.4f;
+    private float footstepTimer;
+
     [Header("Health")]
     [SerializeField] HealthBar healthBar;
     [SerializeField] int currentHealth, maxHealth;
@@ -135,6 +139,22 @@ public class PlayerController : MonoBehaviour
         }
 
         if (underwater) targetVelocity *= moveMultiplier;
+
+        // Footstep system
+        if (isGrounded && Mathf.Abs(rb.linearVelocityX) > 0.1f)
+        {
+            footstepTimer -= Time.fixedDeltaTime;
+            if (footstepTimer <= 0f)
+            {
+                AudioManager.PlaySound(AudioManager.SoundType.WALK);
+                footstepTimer = footstepInterval;
+            }
+        }
+        else
+        {
+            // Reset timer to interval when not walking so first step is delayed
+            footstepTimer = footstepInterval;
+        }
 
         rb.gravityScale = underwater ? underwaterGravityScale : 1f;
 
