@@ -26,10 +26,9 @@ public class Enemy : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] float moveSpeed;
-    [SerializeField] float acceleration;
-    [SerializeField] float chaseRange, strafeRange, attackRange;
-    [SerializeField] float strafeMinTime, strafeMaxTime;
-    float strafeDir, strafeChangeTimer;
+    [SerializeField] float chaseRange, strafeRange, attackRange, strafeJitter;
+    [SerializeField] Transform groundCheck;
+    float idleFlipTimer = 2f, strafeTargetX, strafeChangeTimer;
     bool facingRight = true;
 
     [Header("Health")]
@@ -51,9 +50,6 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if ((rb.linearVelocityX > 0 && !facingRight) || (rb.linearVelocityX < 0 && facingRight)) Flip();
-        anim.SetBool("Moving", rb.linearVelocityX * rb.linearVelocityX > 0f);
-
         switch (currentState)
         {
             case State.Idle:
@@ -72,6 +68,8 @@ public class Enemy : MonoBehaviour
             case State.Recovery:
                 break;
         }
+
+        anim.SetBool("Moving", rb.linearVelocityX * rb.linearVelocityX > 0f);
     }
 
     private void Flip()
@@ -84,39 +82,76 @@ public class Enemy : MonoBehaviour
 
     private void HandleIdle()
     {
-        if (Vector2.Distance(transform.position, player.position) < chaseRange) currentState = State.Chase;
+        float dist = Vector2.Distance(transform.position, player.position);
+
+        idleFlipTimer -= Time.deltaTime;
+        if (idleFlipTimer <= 0f)
+        {
+            Flip();
+            idleFlipTimer = 2f;
+        }
+
+        if (dist < chaseRange)
+        {
+            Vector2 direction = facingRight ? Vector2.right : Vector2.left;
+
+            RaycastHit2D hit = Physics2D.Raycast(
+                (Vector2) transform.position + Vector2.up,
+                direction,
+                dist,
+                LayerMask.GetMask("Default", "Ground")
+            );
+
+            if (hit.collider && hit.collider.CompareTag("Player")) currentState = State.Chase;
+        }
     }
 
     private void HandleChase()
     {
+        float targetVelocity = Mathf.Sign(player.position.x - transform.position.x) * moveSpeed;
+        rb.linearVelocityX = Mathf.MoveTowards(rb.linearVelocityX, targetVelocity, Time.fixedDeltaTime);
+
+        if (IsAboutToFall()) rb.linearVelocityX = 0;
+
+        if ((rb.linearVelocityX > 0 && !facingRight) || (rb.linearVelocityX < 0 && facingRight)) Flip();
+
         float dist = Vector2.Distance(transform.position, player.position);
-        transform.position = Vector2.MoveTowards(transform.position, player.position, Time.deltaTime * 2f);
 
         if (dist < attackRange) SelectAttack();
         else if (dist < strafeRange) currentState = State.Strafe;
-
-        if (dist > chaseRange) currentState = State.Idle;
+        else if (dist > chaseRange)
+        {
+            rb.linearVelocityX = 0;
+            currentState = State.Idle;
+        }
     }
 
     private void HandleStrafe()
     {
-        float dist = Vector2.Distance(transform.position, player.position);
-
+        strafeChangeTimer -= Time.deltaTime;
         if (strafeChangeTimer <= 0f)
         {
-            strafeDir = (Random.value > 0.5f) ? 1f : -1f;
-            strafeChangeTimer = Random.Range(strafeMinTime, strafeMaxTime);
+            float dir = (Random.value > 0.5f) ? 1f : -1f;
+            strafeTargetX = player.position.x + dir * strafeJitter;
+            strafeChangeTimer = 0.7f;
         }
-        else strafeChangeTimer -= Time.deltaTime;
 
-        rb.linearVelocityX = Mathf.MoveTowards(rb.linearVelocityX, strafeDir * moveSpeed, acceleration * Time.fixedDeltaTime);
+        float targetVelocity = Mathf.Sign(strafeTargetX - transform.position.x) * moveSpeed;
+        rb.linearVelocityX = Mathf.MoveTowards(rb.linearVelocityX, targetVelocity, Time.fixedDeltaTime);
+
+        if (IsAboutToFall()) rb.linearVelocityX = 0;
+
+        float playerDir = Mathf.Sign(player.position.x - transform.position.x);
+        if ((playerDir > 0 && !facingRight) || playerDir < 0 && facingRight) Flip();
+
+        float dist = Vector2.Distance(transform.position, player.position);
 
         if (dist <= attackRange)
         {
             rb.linearVelocityX = 0;
             SelectAttack();
         }
-        else if (dist > strafeRange * 1.3f)
+        else if (dist > strafeRange * 1.4f)
         {
             rb.linearVelocityX = 0;
             currentState = State.Chase;
@@ -126,6 +161,13 @@ public class Enemy : MonoBehaviour
             rb.linearVelocityX = 0;
             currentState = State.Idle;
         }
+    }
+
+    private bool IsAboutToFall()
+    {
+        RaycastHit2D front = Physics2D.Raycast(groundCheck.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
+        RaycastHit2D behind = Physics2D.Raycast(-groundCheck.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
+        return (front.collider == null && behind.collider == null);
     }
 
     private void SelectAttack()
@@ -144,18 +186,21 @@ public class Enemy : MonoBehaviour
         currentState = State.Attack;
         currentAttack.ToggleHitbox();
         yield return new WaitForSeconds(currentAttack.attackTime);
+        currentAttack.ToggleHitbox();
 
         currentState = State.Recovery;
-        currentAttack.ToggleHitbox();
         yield return new WaitForSeconds(currentAttack.recoveryTime);
 
-        currentState = State.Chase;
+        float dist = Vector2.Distance(transform.position, player.position);
+        if (dist <= attackRange) SelectAttack();
+        else currentState = State.Chase;
     }
 
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
         flash.DamageFlash();
+        currentState = State.Strafe;
         if (currentHealth <= 0) StartCoroutine(Die());
     }
 

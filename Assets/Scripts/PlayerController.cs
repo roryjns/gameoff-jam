@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public float controllerDeadzone;
     [SerializeField] float jumpForce, jumpBufferTime, coyoteTime, acceleration, deceleration, groundCheckRadius;
     [SerializeField] Transform groundCheck;
-    [SerializeField] LayerMask tilemapLayer;
     Vector2 moveInput;
     bool facingRight = true;
     bool isGrounded;
@@ -122,7 +121,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, tilemapLayer);
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, LayerMask.GetMask("Ground"));
         anim.SetBool("Grounded", isGrounded);
 
         float targetVelocity;
