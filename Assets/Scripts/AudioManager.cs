@@ -8,7 +8,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioSource sfxSource;
     [SerializeField] AudioMixer mixer;
 
-    private static AudioManager Instance;
+    public static AudioManager Instance { get; private set; }
     Dictionary<SoundType, SoundEntry> soundMap;
     Dictionary<SoundType, int> lastClipIndex;
     private readonly float normalCutoff = 22000f, underwaterCutoff = 1200f;
@@ -46,12 +46,17 @@ public class AudioManager : MonoBehaviour
         WALK,
         JUMP,
         DASH,
+        LAND,
         LIGHTATTACK1,
         LIGHTATTACK2,
         LIGHTATTACK3,
         WATERENTER,
         WATEREXIT,
         ORBPICKUP,
+        ENEMYDEATH,
+        ENEMYIDLE,
+        ENEMYWINDUP,
+        ENEMYATTACK,
         THUNDERCLOSE,
         THUNDERFAR,
     }
@@ -134,5 +139,12 @@ public class AudioManager : MonoBehaviour
         
         if (clipToPlay == null) return;
         source.PlayOneShot(clipToPlay, finalVolume);
+    }
+    
+    public SoundEntry GetSound(SoundType type)
+    {
+        if (soundMap.ContainsKey(type))
+            return soundMap[type];
+        return default;
     }
 }

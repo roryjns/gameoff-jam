@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] float footstepInterval = 0.4f;
     private float footstepTimer;
+    private bool wasGrounded;
 
     [Header("Health")]
     [SerializeField] HealthBar healthBar;
@@ -123,6 +124,13 @@ public class PlayerController : MonoBehaviour
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, LayerMask.GetMask("Ground"));
         anim.SetBool("Grounded", isGrounded);
+
+        // Play landing sound
+        if (isGrounded && !wasGrounded && rb.linearVelocityY <= 0f)
+        {
+            AudioManager.PlaySound(AudioManager.SoundType.LAND);
+        }
+        wasGrounded = isGrounded;
 
         float targetVelocity;
         bool isUsingGamepad = playerInput.currentControlScheme == "Gamepad";
