@@ -33,6 +33,7 @@ public class Orbs : MonoBehaviour
             p.remainingLifetime = 0;
             particles[i] = p;
             GameManager.Instance.OrbCollected();
+            AudioManager.PlaySound(AudioManager.SoundType.ORBPICKUP);
         }
 
         ps.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
