@@ -40,16 +40,56 @@ public class Enemy : MonoBehaviour
     [SerializeField] EnemyAttack[] attacks;
     EnemyAttack currentAttack;
 
+    [Header("Audio")]
+    [SerializeField] AudioSource idleAudioSource;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         player = GameObject.FindWithTag("Player").transform;
         flash = GetComponent<Flash>();
+        
+        // Start playing idle sound on loop
+        if (idleAudioSource != null && AudioManager.Instance != null)
+        {
+            var sound = AudioManager.Instance.GetSound(AudioManager.SoundType.ENEMYIDLE);
+            if (sound.clip != null || (sound.clips != null && sound.clips.Length > 0))
+            {
+                AudioClip clipToPlay = sound.clip;
+                if (sound.clips != null && sound.clips.Length > 0)
+                {
+                    clipToPlay = sound.clips[Random.Range(0, sound.clips.Length)];
+                }
+                
+                idleAudioSource.clip = clipToPlay;
+                idleAudioSource.volume = sound.defaultVolume;
+                idleAudioSource.loop = true;
+                idleAudioSource.Play();
+            }
+        }
     }
 
     private void FixedUpdate()
     {
+        // Manage idle sound based on state
+        if (idleAudioSource != null)
+        {
+            bool shouldPlayIdle = currentState != State.Windup && 
+                                  currentState != State.Attack && 
+                                  currentState != State.Recovery &&
+                                  currentState != State.Dead;
+            
+            if (shouldPlayIdle && !idleAudioSource.isPlaying)
+            {
+                idleAudioSource.Play();
+            }
+            else if (!shouldPlayIdle && idleAudioSource.isPlaying)
+            {
+                idleAudioSource.Stop();
+            }
+        }
+
         switch (currentState)
         {
             case State.Idle:
@@ -181,9 +221,11 @@ public class Enemy : MonoBehaviour
         anim.SetTrigger("Attack");
 
         currentState = State.Windup;
+        AudioManager.PlaySound(AudioManager.SoundType.ENEMYWINDUP);
         yield return new WaitForSeconds(currentAttack.windupTime);
 
         currentState = State.Attack;
+        AudioManager.PlaySound(AudioManager.SoundType.ENEMYATTACK);
         currentAttack.ToggleHitbox();
         yield return new WaitForSeconds(currentAttack.attackTime);
         currentAttack.ToggleHitbox();
@@ -200,6 +242,7 @@ public class Enemy : MonoBehaviour
     {
         currentHealth -= damage;
         flash.DamageFlash();
+        AudioManager.PlaySound(AudioManager.SoundType.PLAYERHIT);
         currentState = State.Strafe;
         if (currentHealth <= 0) StartCoroutine(Die());
     }
@@ -213,6 +256,14 @@ public class Enemy : MonoBehaviour
     IEnumerator Die()
     {
         anim.SetTrigger("Death");
+        
+        // Stop idle sound loop
+        if (idleAudioSource != null)
+        {
+            idleAudioSource.Stop();
+        }
+        
+        AudioManager.PlaySound(AudioManager.SoundType.ENEMYDEATH);
         yield return new WaitForSeconds(0.667f);
 
         var orbObject = ObjectPooler.Instance.GetFromPool("Orbs", transform.position + Vector3.up, Quaternion.identity);
