@@ -3469,6 +3469,10 @@ PrefabInstance:
       value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 5679208694180723848, guid: 0e5fabfc28fc42e4d841b865b4db121e, type: 3}
+      propertyPath: lungeForce
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5679208694180723848, guid: 0e5fabfc28fc42e4d841b865b4db121e, type: 3}
       propertyPath: dashDuration
       value: 0.15
       objectReference: {fileID: 0}
@@ -3697,6 +3701,10 @@ PrefabInstance:
     - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
       propertyPath: strafeMinTime
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
+      propertyPath: knockbackForce
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
       propertyPath: moveMultiplier

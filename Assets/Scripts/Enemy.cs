@@ -26,7 +26,7 @@ public class Enemy : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] float moveSpeed, fallCheckRadius;
-    [SerializeField] float chaseRange, strafeRange, attackRange, strafeJitter;
+    [SerializeField] float chaseRange, strafeRange, attackRange, strafeJitter, knockbackForce;
     [SerializeField] Transform groundCheck;
     float idleFlipTimer = 2f, strafeTargetX, strafeChangeTimer;
     bool facingRight = true;
@@ -246,6 +246,9 @@ public class Enemy : MonoBehaviour
         flash.DamageFlash();
         AudioManager.PlaySound(AudioManager.SoundType.PLAYERHIT);
         currentState = State.Strafe;
+        float playerDir = Mathf.Sign(player.position.x - transform.position.x);
+        rb.linearVelocityX += -playerDir * knockbackForce;
+
         if (currentHealth <= 0) StartCoroutine(Die());
     }
 
