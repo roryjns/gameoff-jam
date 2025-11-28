@@ -16,8 +16,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float jumpForce, jumpBufferTime, coyoteTime, acceleration, deceleration, groundCheckRadius;
     [SerializeField] Transform groundCheck;
     Vector2 moveInput;
-    bool facingRight = true;
-    bool isGrounded;
+    bool facingRight = true, isGrounded, isLunging;
     float jumpBufferCounter, coyoteTimeCounter;
 
     [Header("Dashing")]
@@ -36,7 +35,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Attacking")]
     [SerializeField] Weapon weapon;
-    [SerializeField] float maxHeavyChargeTime;
+    [SerializeField] float maxHeavyChargeTime, lungeForce;
     [HideInInspector] public int currentComboStep;
     float heavyChargeTime;
     bool isChargingHeavy;
@@ -103,7 +102,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isDashing) return;
+        if (isDashing || isLunging) return;
 
         moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
 
@@ -262,6 +261,16 @@ public class PlayerController : MonoBehaviour
         anim.SetInteger("ComboStep", currentComboStep);
         anim.SetTrigger("LightAttack");
         AudioManager.PlaySound(AudioManager.SoundType.LIGHTATTACK1);
+        StartCoroutine(LungeCoroutine());
+    }
+
+    private IEnumerator LungeCoroutine()
+    {
+        float dir = facingRight ? 1f : -1f;
+        isLunging = true;
+        rb.linearVelocityX = dir * lungeForce;
+        yield return new WaitForSeconds(0.3f);
+        isLunging = false;
     }
 
     public void CheckComboContinue()
@@ -273,10 +282,13 @@ public class PlayerController : MonoBehaviour
             if (currentComboStep > 3) currentComboStep = 1;
             anim.SetInteger("ComboStep", currentComboStep);
             anim.SetTrigger("LightAttack");
-            
+
             // Play appropriate attack sound
             if (currentComboStep == 1)
+            {
+                StartCoroutine(LungeCoroutine());
                 AudioManager.PlaySound(AudioManager.SoundType.LIGHTATTACK1);
+            }
             else if (currentComboStep == 2)
                 AudioManager.PlaySound(AudioManager.SoundType.LIGHTATTACK2);
             else if (currentComboStep == 3)
@@ -309,6 +321,7 @@ public class PlayerController : MonoBehaviour
         heavyChargeTime = 0;
         isChargingHeavy = false;
         anim.SetTrigger("HeavyRelease");
+        StartCoroutine(LungeCoroutine());
         Debug.Log("Heavy attack!");
     }
 
