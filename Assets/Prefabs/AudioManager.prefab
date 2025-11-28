@@ -251,7 +251,17 @@ MonoBehaviour:
     defaultVolume: 1
   - type: 2
     clip: {fileID: 0}
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: 1ebfe37aa8fc6184bb49998c4762f088, type: 3}
+    - {fileID: 8300000, guid: 0f73662b9ab460e49b2f1f30deaaac66, type: 3}
+    - {fileID: 8300000, guid: 60b529109a283cc478f1f64b466cb3b0, type: 3}
+    - {fileID: 8300000, guid: 475361d4c6b880e4bba2009959b25915, type: 3}
+    - {fileID: 8300000, guid: 8c9402fdf26c85c4181d3a24e2e52224, type: 3}
+    - {fileID: 8300000, guid: b83d76c0eb6984d4abc5fd34b216b878, type: 3}
+    - {fileID: 8300000, guid: 1eed0aedd0c62a844b5e3793e09906b8, type: 3}
+    - {fileID: 8300000, guid: dd94b2fad71cfc44db083c2b5a7d504f, type: 3}
+    - {fileID: 8300000, guid: d5f5c1bf1425e9d4fb08bb12033d19ce, type: 3}
+    - {fileID: 8300000, guid: fba73f0164db74543bec85aa8955abb3, type: 3}
     defaultVolume: 1
   - type: 3
     clip: {fileID: 8300000, guid: 55cd395e1aa68d04389681137618d237, type: 3}
@@ -262,7 +272,7 @@ MonoBehaviour:
     clips: []
     defaultVolume: 1
   - type: 5
-    clip: {fileID: 8300000, guid: b35fca117f19cd745907f3ec48a24ee5, type: 3}
+    clip: {fileID: 8300000, guid: fe83a4ad96494ef48bd2e45e7e5c53c9, type: 3}
     clips: []
     defaultVolume: 1
   - type: 6
@@ -278,27 +288,43 @@ MonoBehaviour:
     clips: []
     defaultVolume: 1
   - type: 9
-    clip: {fileID: 8300000, guid: ff0f2fcd464e7db448b52bc4bca864dd, type: 3}
+    clip: {fileID: 8300000, guid: 3537fade20e394741b1fcb729d3f55b7, type: 3}
     clips: []
     defaultVolume: 1
   - type: 10
+    clip: {fileID: 8300000, guid: ff0f2fcd464e7db448b52bc4bca864dd, type: 3}
+    clips: []
+    defaultVolume: 1
+  - type: 11
     clip: {fileID: 8300000, guid: d674b3d42978890489f9b40e48d51e76, type: 3}
     clips: []
     defaultVolume: 1
+  - type: 12
+    clip: {fileID: 8300000, guid: a95d247520f5ad0468461703a74a0f21, type: 3}
+    clips: []
+    defaultVolume: 1
+  - type: 13
+    clip: {fileID: 8300000, guid: f07a29995b61b3947bb9a1ebc97452c4, type: 3}
+    clips: []
+    defaultVolume: 1
+  - type: 14
+    clip: {fileID: 8300000, guid: 66df75f861ea4a841b35d245b524bdd9, type: 3}
+    clips: []
+    defaultVolume: 1
+  - type: 15
+    clip: {fileID: 8300000, guid: 4e47d8513e55f434dbee77aa9e734f14, type: 3}
+    clips: []
+    defaultVolume: 1
   - type: 16
+    clip: {fileID: 8300000, guid: 09d6800750c12f64a8ae0d9881717551, type: 3}
+    clips: []
+    defaultVolume: 1
+  - type: 17
     clip: {fileID: 8300000, guid: 885cc22ccc85a584b93d7b2d448522dd, type: 3}
     clips: []
     defaultVolume: 1
   - type: 17
-    clip: {fileID: 8300000, guid: eabf57c84414dc141a3e2c5513ef6fed, type: 3}
-    clips: []
-    defaultVolume: 1
-  - type: 14
-    clip: {fileID: 8300000, guid: 4e47d8513e55f434dbee77aa9e734f14, type: 3}
-    clips: []
-    defaultVolume: 1
-  - type: 12
-    clip: {fileID: 8300000, guid: f07a29995b61b3947bb9a1ebc97452c4, type: 3}
+    clip: {fileID: 8300000, guid: 885cc22ccc85a584b93d7b2d448522dd, type: 3}
     clips: []
     defaultVolume: 1
   sfxSource: {fileID: 2954744814264344927}
