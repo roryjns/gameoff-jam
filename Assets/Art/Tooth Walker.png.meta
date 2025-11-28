@@ -1,0 +1,874 @@
+fileFormatVersion: 2
+guid: c9c28d8b9518d5b49acc436698300bfe
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4761265735121949625
+    second: tooth walker sprite-Sheet_0
+  - first:
+      213: 693834750884780659
+    second: tooth walker sprite-Sheet_1
+  - first:
+      213: -5504097897449283753
+    second: tooth walker sprite-Sheet_2
+  - first:
+      213: 6216406014579331949
+    second: tooth walker sprite-Sheet_3
+  - first:
+      213: -4414185822409100093
+    second: tooth walker sprite-Sheet_4
+  - first:
+      213: 2331954282414087992
+    second: tooth walker sprite-Sheet_5
+  - first:
+      213: -2952500864280035372
+    second: tooth walker sprite-Sheet_6
+  - first:
+      213: -5530439348810607683
+    second: tooth walker sprite-Sheet_7
+  - first:
+      213: -7085871435035408519
+    second: tooth walker sprite-Sheet_8
+  - first:
+      213: 608785250197183045
+    second: tooth walker sprite-Sheet_9
+  - first:
+      213: 2664132397249503948
+    second: tooth walker sprite-Sheet_10
+  - first:
+      213: -4083304598427478065
+    second: tooth walker sprite-Sheet_11
+  - first:
+      213: 5068951378710981209
+    second: tooth walker sprite-Sheet_12
+  - first:
+      213: 6247628177746665802
+    second: tooth walker sprite-Sheet_13
+  - first:
+      213: 378108147432993944
+    second: tooth walker sprite-Sheet_14
+  - first:
+      213: 6802941105159908100
+    second: tooth walker sprite-Sheet_15
+  - first:
+      213: 2272756377514292793
+    second: tooth walker sprite-Sheet_16
+  - first:
+      213: -8135394986023410254
+    second: tooth walker sprite-Sheet_17
+  - first:
+      213: 5457043062027624001
+    second: tooth walker sprite-Sheet_18
+  - first:
+      213: -6035827198496337756
+    second: tooth walker sprite-Sheet_19
+  - first:
+      213: -3399528229862148074
+    second: tooth walker sprite-Sheet_20
+  - first:
+      213: 5562323661801644306
+    second: tooth walker sprite-Sheet_21
+  - first:
+      213: -8301584028075321337
+    second: tooth walker sprite-Sheet_22
+  - first:
+      213: 3810158035132189990
+    second: tooth walker sprite-Sheet_23
+  - first:
+      213: 9145750660100572377
+    second: tooth walker sprite-Sheet_24
+  - first:
+      213: 1347519800307295561
+    second: tooth walker sprite-Sheet_25
+  - first:
+      213: 8820552000502060177
+    second: tooth walker sprite-Sheet_26
+  - first:
+      213: 9025928896348765890
+    second: tooth walker sprite-Sheet_27
+  - first:
+      213: 7706508967416635285
+    second: tooth walker sprite-Sheet_28
+  - first:
+      213: -6060150316790417556
+    second: tooth walker sprite-Sheet_29
+  - first:
+      213: -4091503007739144299
+    second: tooth walker sprite-Sheet_30
+  - first:
+      213: 6348113449478965893
+    second: tooth walker sprite-Sheet_31
+  - first:
+      213: -6611345144720083769
+    second: tooth walker sprite-Sheet_32
+  - first:
+      213: -623198983557915377
+    second: tooth walker sprite-Sheet_33
+  - first:
+      213: -6818390990570620195
+    second: tooth walker sprite-Sheet_34
+  - first:
+      213: 982036345639569642
+    second: tooth walker sprite-Sheet_35
+  - first:
+      213: 4411967287448677525
+    second: tooth walker sprite-Sheet_36
+  - first:
+      213: 306456209693454162
+    second: tooth walker sprite-Sheet_37
+  - first:
+      213: -8524341796843091133
+    second: tooth walker sprite-Sheet_38
+  - first:
+      213: -7284506601311657868
+    second: tooth walker sprite-Sheet_39
+  - first:
+      213: -693262579124209745
+    second: tooth walker sprite-Sheet_40
+  - first:
+      213: -7914005673590309827
+    second: tooth walker sprite-Sheet_41
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 0
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Walk 1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 261
+        width: 12
+        height: 41
+      alignment: 9
+      pivot: {x: 0.33333334, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b3de27b5f9631240800000000000000
+      internalID: 4761265735121949625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk 2
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 261
+        width: 14
+        height: 40
+      alignment: 9
+      pivot: {x: 0.2857143, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37a1f43a70ff0a900800000000000000
+      internalID: 693834750884780659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk 3
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 261
+        width: 16
+        height: 40
+      alignment: 9
+      pivot: {x: 0.25, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75f9f8dcf148d93b0800000000000000
+      internalID: -5504097897449283753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk 4
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 261
+        width: 15
+        height: 39
+      alignment: 9
+      pivot: {x: 0.26666668, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d635a96955c154650800000000000000
+      internalID: 6216406014579331949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk 5
+      rect:
+        serializedVersion: 2
+        x: 282
+        y: 261
+        width: 19
+        height: 39
+      alignment: 9
+      pivot: {x: 0.21052632, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c47db2c169adb2c0800000000000000
+      internalID: -4414185822409100093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walk 6
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 261
+        width: 14
+        height: 39
+      alignment: 9
+      pivot: {x: 0.2857143, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83f1ebb8014cc5020800000000000000
+      internalID: 2331954282414087992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle 1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 197
+        width: 12
+        height: 40
+      alignment: 9
+      pivot: {x: 0.33333334, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dffd816b1c9607d0800000000000000
+      internalID: -2952500864280035372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle 2
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 197
+        width: 11
+        height: 38
+      alignment: 9
+      pivot: {x: 0.36363637, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db31d4ab6beef33b0800000000000000
+      internalID: -5530439348810607683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle 3
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 197
+        width: 10
+        height: 36
+      alignment: 9
+      pivot: {x: 0.4, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97780aee87de9ad90800000000000000
+      internalID: -7085871435035408519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle 4
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 197
+        width: 9
+        height: 39
+      alignment: 9
+      pivot: {x: 0.44444445, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54a1086a5f6d27800800000000000000
+      internalID: 608785250197183045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damaged 1
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 197
+        width: 9
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc2aaa4dc46e8f420800000000000000
+      internalID: 2664132397249503948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damaged 2
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 197
+        width: 9
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc7d20d1a103557c0800000000000000
+      internalID: -4083304598427478065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death 1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 133
+        width: 10
+        height: 37
+      alignment: 9
+      pivot: {x: 0.4, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95a6bc72c68885640800000000000000
+      internalID: 5068951378710981209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death 2
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 133
+        width: 16
+        height: 34
+      alignment: 9
+      pivot: {x: 0.5, y: -0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a41af4fe9b804b650800000000000000
+      internalID: 6247628177746665802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death 4
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 133
+        width: 39
+        height: 45
+      alignment: 9
+      pivot: {x: 0.4871795, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 211ef6366e7513d40800000000000000
+      internalID: 5562323661801644306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death 5
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 133
+        width: 48
+        height: 40
+      alignment: 9
+      pivot: {x: 0.5208334, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d4c693e4cb3cee70800000000000000
+      internalID: 9145750660100572377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death 3
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 133
+        width: 25
+        height: 39
+      alignment: 9
+      pivot: {x: 0.44, y: -0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ce3dc2828a824d70800000000000000
+      internalID: 9025928896348765890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death 6
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 133
+        width: 49
+        height: 30
+      alignment: 9
+      pivot: {x: 0.5102041, y: -0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c677c3a156506eba0800000000000000
+      internalID: -6060150316790417556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death 7
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 69
+        width: 50
+        height: 9
+      alignment: 9
+      pivot: {x: 0.52, y: -0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c4b4798e98cf34a0800000000000000
+      internalID: -6611345144720083769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death 8
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 69
+        width: 50
+        height: 32
+      alignment: 9
+      pivot: {x: 0.52, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae88e527ad4e0ad00800000000000000
+      internalID: 982036345639569642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wind Up 1
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 69
+        width: 14
+        height: 41
+      alignment: 9
+      pivot: {x: 0.42857146, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59ca5015fd47a3d30800000000000000
+      internalID: 4411967287448677525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wind Up 2
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 69
+        width: 20
+        height: 42
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25fadfd8c40c04400800000000000000
+      internalID: 306456209693454162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wind Up 3
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 69
+        width: 22
+        height: 44
+      alignment: 9
+      pivot: {x: 0.54545456, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34b0727bc4473b980800000000000000
+      internalID: -8524341796843091133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wind Up 4
+      rect:
+        serializedVersion: 2
+        x: 342
+        y: 69
+        width: 36
+        height: 47
+      alignment: 9
+      pivot: {x: 0.3888889, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 470a4d057db38ea90800000000000000
+      internalID: -7284506601311657868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack 1
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 5
+        width: 52
+        height: 38
+      alignment: 9
+      pivot: {x: 0.4423077, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa7fa3b7b590166f0800000000000000
+      internalID: -693262579124209745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack 2
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 5
+        width: 51
+        height: 34
+      alignment: 9
+      pivot: {x: 0.5294118, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3c393325cdcb2290800000000000000
+      internalID: -7914005673590309827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 2a0b89d6fe3669e4780289a893e6f766
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      2Attack: -8524341796843091133
+      Attack 1: -693262579124209745
+      Attack 2: -7914005673590309827
+      Damaged 1: 2664132397249503948
+      Damaged 2: -4083304598427478065
+      Death 1: 5068951378710981209
+      Death 2: 6247628177746665802
+      Death 3: 9025928896348765890
+      Death 4: 5562323661801644306
+      Death 5: 9145750660100572377
+      Death 6: -6060150316790417556
+      Death 7: -6611345144720083769
+      Death 8: 982036345639569642
+      Idle 1: -2952500864280035372
+      Idle 2: -5530439348810607683
+      Idle 3: -7085871435035408519
+      Idle 4: 608785250197183045
+      Player death and game over screen: 693834750884780659
+      Walk 1: 4761265735121949625
+      Walk 2: 693834750884780659
+      Walk 3: -5504097897449283753
+      Walk 4: 6216406014579331949
+      Walk 5: -4414185822409100093
+      Walk 6: 2331954282414087992
+      Wind Up 1: 4411967287448677525
+      Wind Up 2: 306456209693454162
+      Wind Up 3: -8524341796843091133
+      Wind Up 4: -7284506601311657868
+      tooth walker sprite-Sheet_14: 378108147432993944
+      tooth walker sprite-Sheet_15: 6802941105159908100
+      tooth walker sprite-Sheet_16: 2272756377514292793
+      tooth walker sprite-Sheet_17: -8135394986023410254
+      tooth walker sprite-Sheet_18: 5457043062027624001
+      tooth walker sprite-Sheet_19: -6035827198496337756
+      tooth walker sprite-Sheet_20: -3399528229862148074
+      tooth walker sprite-Sheet_22: -8301584028075321337
+      tooth walker sprite-Sheet_23: 3810158035132189990
+      tooth walker sprite-Sheet_25: 1347519800307295561
+      tooth walker sprite-Sheet_26: 8820552000502060177
+      tooth walker sprite-Sheet_28: 7706508967416635285
+      tooth walker sprite-Sheet_30: -4091503007739144299
+      tooth walker sprite-Sheet_31: 6348113449478965893
+      tooth walker sprite-Sheet_33: -623198983557915377
+      tooth walker sprite-Sheet_34: -6818390990570620195
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

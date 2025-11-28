@@ -5,10 +5,10 @@ using System.Collections;
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
-    [SerializeField] Rigidbody2D rb;
-    [SerializeField] Animator animator;
     [SerializeField] PauseMenu pauseMenu;
     [HideInInspector] public PlayerInput playerInput;
+    Rigidbody2D rb;
+    Animator anim;
 
     [Header("Movement")]
     [SerializeField] float moveSpeed;
@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float jumpForce, jumpBufferTime, coyoteTime, acceleration, deceleration, groundCheckRadius;
     [SerializeField] Transform groundCheck;
     [SerializeField] LayerMask tilemapLayer;
-    [HideInInspector] public bool underwater;
     Vector2 moveInput;
     bool facingRight = true;
     bool isGrounded;
@@ -54,6 +53,7 @@ public class PlayerController : MonoBehaviour
     [Header("Underwater")]
     [SerializeField] float underwaterGravityScale;
     [SerializeField] float moveMultiplier, jumpForceMultiplier;
+    [HideInInspector] public bool underwater;
 
     private void Awake()
     {
@@ -90,6 +90,8 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        rb = gameObject.GetComponent<Rigidbody2D>();
+        anim = gameObject.GetComponent<Animator>();
         healthBar.Initialise(PlayerPrefs.GetInt("MaxHealth", 5));
         healthBar.UpdateHealth(currentHealth);
         GameManager.Instance.runData.currentHealth = currentHealth;
@@ -110,26 +112,26 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("LightAttack"))
+        if (anim.GetCurrentAnimatorStateInfo(0).IsTag("LightAttack"))
         {
             rb.linearVelocityX = 0;
             return;
         }
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, tilemapLayer);
-        animator.SetBool("Grounded", isGrounded);
+        anim.SetBool("Grounded", isGrounded);
 
         float targetVelocity;
         bool isUsingGamepad = playerInput.currentControlScheme == "Gamepad";
         if ((isUsingGamepad && moveInput.sqrMagnitude > controllerDeadzone * controllerDeadzone) || (!isUsingGamepad && moveInput.sqrMagnitude > 0.001f))
         {
             targetVelocity = moveInput.x * moveSpeed;
-            animator.SetBool("Moving", true);
+            anim.SetBool("Moving", true);
         }
         else
         {
             targetVelocity = 0;
-            animator.SetBool("Moving", false);
+            anim.SetBool("Moving", false);
         }
 
         if (underwater) targetVelocity *= moveMultiplier;
@@ -168,7 +170,7 @@ public class PlayerController : MonoBehaviour
             AudioManager.PlaySound(AudioManager.SoundType.JUMP);
         }
 
-        animator.SetFloat("VerticalSpeed", rb.linearVelocityY);
+        anim.SetFloat("VerticalSpeed", rb.linearVelocityY);
     }
 
     private void Flip()
@@ -195,8 +197,8 @@ public class PlayerController : MonoBehaviour
     {
         canDash = false; 
         isDashing = true;
-        animator.SetBool("Dashing", true);
-        animator.SetInteger("ComboStep", currentComboStep);
+        anim.SetBool("Dashing", true);
+        anim.SetInteger("ComboStep", currentComboStep);
         isChargingHeavy = false;
         heavyChargeTime = 0f;
         float originalGravity = rb.gravityScale; 
@@ -214,7 +216,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(dashDuration); 
         rb.gravityScale = originalGravity; 
         isDashing = false;
-        animator.SetBool("Dashing", false);
+        anim.SetBool("Dashing", false);
         yield return new WaitForSeconds(dashCooldown); 
         canDash = true;
     }
@@ -223,27 +225,27 @@ public class PlayerController : MonoBehaviour
     {
         if (!isGrounded || isDashing) return;
 
-        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("LightAttack")) 
+        if (anim.GetCurrentAnimatorStateInfo(0).IsTag("LightAttack")) 
         {
             comboQueued = true;
             return; 
         }
 
         currentComboStep = 1;
-        animator.SetInteger("ComboStep", currentComboStep);
-        animator.SetTrigger("LightAttack");
+        anim.SetInteger("ComboStep", currentComboStep);
+        anim.SetTrigger("LightAttack");
         AudioManager.PlaySound(AudioManager.SoundType.LIGHTATTACK1);
     }
 
     public void CheckComboContinue()
     {
         if (comboQueued)
-        {
+        {   
             comboQueued = false;
             currentComboStep++;
             if (currentComboStep > 3) currentComboStep = 1;
-            animator.SetInteger("ComboStep", currentComboStep);
-            animator.SetTrigger("LightAttack");
+            anim.SetInteger("ComboStep", currentComboStep);
+            anim.SetTrigger("LightAttack");
             
             // Play appropriate attack sound
             if (currentComboStep == 1)
@@ -256,7 +258,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             currentComboStep = 0;
-            animator.SetInteger("ComboStep", currentComboStep);
+            anim.SetInteger("ComboStep", currentComboStep);
         }
     }
 
@@ -265,7 +267,7 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocityX = 0;
         heavyChargeTime = 0;
         isChargingHeavy = true;
-        animator.SetTrigger("HeavyBegin");
+        anim.SetTrigger("HeavyBegin");
         Debug.Log("Charging heavy attack...");
     }
 
@@ -279,7 +281,7 @@ public class PlayerController : MonoBehaviour
         if (heavyChargeTime <= 0) return;
         heavyChargeTime = 0;
         isChargingHeavy = false;
-        animator.SetTrigger("HeavyRelease");
+        anim.SetTrigger("HeavyRelease");
         Debug.Log("Heavy attack!");
     }
 
@@ -316,7 +318,7 @@ public class PlayerController : MonoBehaviour
         {
             currentHealth = 0;
             GameManager.Instance.runData.currentHealth = currentHealth;
-            animator.SetTrigger("Death");
+            anim.SetTrigger("Death");
             StartCoroutine(GameManager.Instance.OnPlayerDeath());
         }
         healthBar.UpdateHealth(currentHealth);
