@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour
     Transform player;
 
     [Header("Movement")]
-    [SerializeField] float moveSpeed;
+    [SerializeField] float moveSpeed, fallCheckRadius;
     [SerializeField] float chaseRange, strafeRange, attackRange, strafeJitter;
     [SerializeField] Transform groundCheck;
     float idleFlipTimer = 2f, strafeTargetX, strafeChangeTimer;
@@ -205,9 +205,11 @@ public class Enemy : MonoBehaviour
 
     private bool IsAboutToFall()
     {
-        RaycastHit2D front = Physics2D.Raycast(groundCheck.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
-        RaycastHit2D behind = Physics2D.Raycast(-groundCheck.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
-        return (front.collider == null && behind.collider == null);
+        float moveDir = Mathf.Sign(rb.linearVelocityX);
+        if (moveDir == 0) moveDir = facingRight ? 1 : -1;
+        Vector2 checkPos = (Vector2)transform.position + Vector2.right * moveDir;
+        bool groundAhead = Physics2D.OverlapCircle(checkPos, fallCheckRadius, LayerMask.GetMask("Ground"));
+        return !groundAhead;
     }
 
     private void SelectAttack()
