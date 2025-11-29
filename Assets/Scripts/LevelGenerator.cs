@@ -274,7 +274,7 @@ public class LevelGenerator : MonoBehaviour
         Vector3 cellPos = transform.position - new Vector3(position.x, position.y);
         int x = (int)-Mathf.Floor(cellPos.x) / ChunkWidth;
         int y = (int)Mathf.Floor(cellPos.y + ChunkHeight) / ChunkHeight;
-        return GetChunk(x, y, 0);
+        return GetChunk(x, y, 1);
     }
 }
 public enum LevelPattern

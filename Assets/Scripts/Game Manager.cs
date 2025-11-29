@@ -2,10 +2,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
+using System;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    public event EventHandler<Enemy> OnEnemyDeath;
 
     [System.Serializable]
     public class RunData // Data that is lost upon closing the game or dying
@@ -87,5 +89,10 @@ public class GameManager : MonoBehaviour
         }
 
         fadeCanvas.alpha = targetAlpha;
+    }
+
+    internal void EnemyDied(Enemy enemy)
+    {
+        OnEnemyDeath?.Invoke(this, enemy);
     }
 }

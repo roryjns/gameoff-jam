@@ -176,6 +176,8 @@ public class Enemy : MonoBehaviour
         if (underwater) orbs.SetOrbCount(baseOrbsDropped * 2);
         else orbs.SetOrbCount(baseOrbsDropped);
 
+        GameManager.Instance.EnemyDied(this);
+
         gameObject.SetActive(false);
     }
 

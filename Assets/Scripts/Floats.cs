@@ -59,7 +59,6 @@ public class Floats : MonoBehaviour
                 totalForce += power * penetration;
             }
             float torque = Mathf.Clamp(rb.rotation * Mathf.Deg2Rad, -1, 1);
-            Debug.Log(new { torque, rb.rotation });
             rb.AddTorque(-torque);
         }
         else
