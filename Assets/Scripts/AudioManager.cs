@@ -1,6 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
-using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioSource sfxSource;
     [SerializeField] AudioMixer mixer;
 
-    private static AudioManager Instance;
+    public static AudioManager Instance { get; private set; }
     Dictionary<SoundType, SoundEntry> soundMap;
     Dictionary<SoundType, int> lastClipIndex;
     private readonly float normalCutoff = 22000f, underwaterCutoff = 1200f;
@@ -46,12 +47,18 @@ public class AudioManager : MonoBehaviour
         WALK,
         JUMP,
         DASH,
+        LAND,
         LIGHTATTACK1,
         LIGHTATTACK2,
         LIGHTATTACK3,
+        PLAYERHIT,
         WATERENTER,
         WATEREXIT,
         ORBPICKUP,
+        ENEMYDEATH,
+        ENEMYIDLE,
+        ENEMYWINDUP,
+        ENEMYATTACK,
         THUNDERCLOSE,
         THUNDERFAR,
     }
@@ -134,5 +141,50 @@ public class AudioManager : MonoBehaviour
         
         if (clipToPlay == null) return;
         source.PlayOneShot(clipToPlay, finalVolume);
+    }
+    
+    public SoundEntry GetSound(SoundType type)
+    {
+        if (soundMap.ContainsKey(type))
+            return soundMap[type];
+        return default;
+    }
+
+    public IEnumerator FadeOut(float duration)
+    {
+        // Collect all exposed volume parameters on the mixer
+        var parameters = new List<string>
+        {
+            "MusicVolume",
+            "SfxVolume"
+        };
+
+        // Cache initial values
+        Dictionary<string, float> startValues = new();
+        foreach (var p in parameters)
+        {
+            mixer.GetFloat(p, out float v);
+            startValues[p] = v;
+        }
+
+        float time = 0f;
+
+        while (time < duration)
+        {
+            float t = time / duration;
+            foreach (var p in parameters)
+            {
+                float start = startValues[p];
+                float end = -80f;
+                mixer.SetFloat(p, Mathf.Lerp(start, end, t));
+            }
+
+            time += Time.unscaledDeltaTime; // Ignores pause
+            yield return null;
+        }
+
+        // Force to silence at the very end
+        foreach (var p in parameters)
+            mixer.SetFloat(p, -80f);
     }
 }

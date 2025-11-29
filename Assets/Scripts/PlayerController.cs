@@ -15,10 +15,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public float controllerDeadzone;
     [SerializeField] float jumpForce, jumpBufferTime, coyoteTime, acceleration, deceleration, groundCheckRadius;
     [SerializeField] Transform groundCheck;
-    [SerializeField] LayerMask tilemapLayer;
     Vector2 moveInput;
-    bool facingRight = true;
-    bool isGrounded;
+    bool facingRight = true, isGrounded, isLunging;
     float jumpBufferCounter, coyoteTimeCounter;
 
     [Header("Dashing")]
@@ -29,14 +27,17 @@ public class PlayerController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] float footstepInterval = 0.4f;
     private float footstepTimer;
+    private bool wasGrounded;
 
     [Header("Health")]
     [SerializeField] HealthBar healthBar;
     [SerializeField] int currentHealth, maxHealth;
+    Flash flash;
+    bool invulnerable;
 
     [Header("Attacking")]
     [SerializeField] Weapon weapon;
-    [SerializeField] float maxHeavyChargeTime;
+    [SerializeField] float maxHeavyChargeTime, lungeForce;
     [HideInInspector] public int currentComboStep;
     float heavyChargeTime;
     bool isChargingHeavy;
@@ -98,12 +99,13 @@ public class PlayerController : MonoBehaviour
         anim = gameObject.GetComponent<Animator>();
         healthBar.Initialise(PlayerPrefs.GetInt("MaxHealth", 5));
         healthBar.UpdateHealth(currentHealth);
+        flash = GetComponent<Flash>();
         GameManager.Instance.runData.currentHealth = currentHealth;
     }
 
     private void FixedUpdate()
     {
-        if (isDashing) return;
+        if (isDashing || isLunging || currentHealth <= 0) return;
 
         moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
 
@@ -122,8 +124,15 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, tilemapLayer);
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, LayerMask.GetMask("Ground"));
         anim.SetBool("Grounded", isGrounded);
+
+        // Play landing sound
+        if (isGrounded && !wasGrounded && rb.linearVelocityY <= 0f)
+        {
+            AudioManager.PlaySound(AudioManager.SoundType.LAND);
+        }
+        wasGrounded = isGrounded;
 
         float targetVelocity;
         bool isUsingGamepad = playerInput.currentControlScheme == "Gamepad";
@@ -255,6 +264,16 @@ public class PlayerController : MonoBehaviour
         anim.SetInteger("ComboStep", currentComboStep);
         anim.SetTrigger("LightAttack");
         AudioManager.PlaySound(AudioManager.SoundType.LIGHTATTACK1);
+        StartCoroutine(Lunge());
+    }
+
+    private IEnumerator Lunge()
+    {
+        float dir = facingRight ? 1f : -1f;
+        isLunging = true;
+        rb.linearVelocityX = dir * lungeForce;
+        yield return new WaitForSeconds(0.3f);
+        isLunging = false;
     }
 
     public void CheckComboContinue()
@@ -266,10 +285,13 @@ public class PlayerController : MonoBehaviour
             if (currentComboStep > 3) currentComboStep = 1;
             anim.SetInteger("ComboStep", currentComboStep);
             anim.SetTrigger("LightAttack");
-            
+
             // Play appropriate attack sound
             if (currentComboStep == 1)
+            {
+                StartCoroutine(Lunge());
                 AudioManager.PlaySound(AudioManager.SoundType.LIGHTATTACK1);
+            }
             else if (currentComboStep == 2)
                 AudioManager.PlaySound(AudioManager.SoundType.LIGHTATTACK2);
             else if (currentComboStep == 3)
@@ -302,6 +324,7 @@ public class PlayerController : MonoBehaviour
         heavyChargeTime = 0;
         isChargingHeavy = false;
         anim.SetTrigger("HeavyRelease");
+        StartCoroutine(Lunge());
         Debug.Log("Heavy attack!");
     }
 
@@ -333,15 +356,21 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (currentHealth <= 0 || invulnerable) return;
         currentHealth -= damage;
-        if (currentHealth < 0)
+        flash.DamageFlash();
+        healthBar.UpdateHealth(currentHealth);
+        if (currentHealth <= 0)
         {
-            currentHealth = 0;
-            GameManager.Instance.runData.currentHealth = currentHealth;
+            rb.linearVelocityX = 0;
             anim.SetTrigger("Death");
             StartCoroutine(GameManager.Instance.OnPlayerDeath());
         }
-        healthBar.UpdateHealth(currentHealth);
+    }
+
+    public void ToggleInvulnerable()
+    {
+        invulnerable = !invulnerable;
     }
 
     private void OnDestroy()
