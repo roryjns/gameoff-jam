@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField] int damage = 20;
+    [SerializeField] int damage;
     BoxCollider2D hitbox;
 
-    private void Awake()
+    private void Start()
     {
         hitbox = GetComponent<BoxCollider2D>();
         gameObject.SetActive(false);

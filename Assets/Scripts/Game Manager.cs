@@ -1,7 +1,8 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using TMPro;
 using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,9 +16,10 @@ public class GameManager : MonoBehaviour
     }
 
     public RunData runData = new();
-    [SerializeField] CanvasGroup fadeCanvas;
+    [SerializeField] CanvasGroup blankCanvas, deathCanvas;
     [SerializeField] PlayerController playerController;
-    [SerializeField] TextMeshProUGUI orbText;
+    [SerializeField] TextMeshProUGUI orbText, deathText;
+    [SerializeField] GameObject gameOverFirst;
 
     private void Awake()
     {
@@ -33,7 +35,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // Generate level
-        StartCoroutine(FadeCanvas(0f, 0.5f)); // Fade from black
+        StartCoroutine(FadeCanvas(blankCanvas, 0f, 0.5f)); // Fade from black
     }
 
     public void OrbCollected()
@@ -49,12 +51,17 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator LoadNextLevel()
     {
-        yield return FadeCanvas(1f, 1f);
+        yield return FadeCanvas(blankCanvas, 1f, 1f);
         ObjectPooler.Instance.ClearAllPools();
-        fadeCanvas.gameObject.SetActive(false);
         StartCoroutine(LoadScene(SceneManager.GetActiveScene().buildIndex + 1));
     }
 
+    public void RestartRun()
+    {
+        AudioManager.PlaySound(AudioManager.SoundType.UICONFIRM);
+        StartCoroutine(LoadScene(1));
+
+    }
     public void ExitToMenu()
     {
         AudioManager.PlaySound(AudioManager.SoundType.UIBACK);
@@ -63,29 +70,33 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator LoadScene(int sceneIndex)
     {
-        yield return FadeCanvas(1f, 0.5f); // Fade to black
+        yield return FadeCanvas(blankCanvas, 1f, 2f);
         SceneManager.LoadScene(sceneIndex);
     }
 
     public IEnumerator OnPlayerDeath()
     {
-        yield return FadeCanvas(1f, 0.5f); // Fade to black
-        runData = null;
+        deathText.gameObject.SetActive(true);
+        PlayerController.Instance.playerInput.SwitchCurrentActionMap("UI");
+        EventSystem.current.SetSelectedGameObject(gameOverFirst);
+        StartCoroutine(AudioManager.Instance.FadeOut(3f));
+        yield return FadeCanvas(deathCanvas, 1f, 2f);
+        ObjectPooler.Instance.ClearAllPools();
     }
 
-    private IEnumerator FadeCanvas(float targetAlpha, float duration)
+    private IEnumerator FadeCanvas(CanvasGroup canvas, float targetAlpha, float duration)
     {
-        fadeCanvas.gameObject.SetActive(true);
-        float startAlpha = fadeCanvas.alpha;
+        canvas.gameObject.SetActive(true);
+        float startAlpha = canvas.alpha;
         float elapsedTime = 0f;
 
         while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;
-            fadeCanvas.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsedTime / duration);
+            canvas.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsedTime / duration);
             yield return null;
         }
 
-        fadeCanvas.alpha = targetAlpha;
+        canvas.alpha = targetAlpha;
     }
 }

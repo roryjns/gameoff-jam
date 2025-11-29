@@ -1,6 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
-using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour
 {
@@ -147,5 +148,43 @@ public class AudioManager : MonoBehaviour
         if (soundMap.ContainsKey(type))
             return soundMap[type];
         return default;
+    }
+
+    public IEnumerator FadeOut(float duration)
+    {
+        // Collect all exposed volume parameters on the mixer
+        var parameters = new List<string>
+        {
+            "MusicVolume",
+            "SfxVolume"
+        };
+
+        // Cache initial values
+        Dictionary<string, float> startValues = new();
+        foreach (var p in parameters)
+        {
+            mixer.GetFloat(p, out float v);
+            startValues[p] = v;
+        }
+
+        float time = 0f;
+
+        while (time < duration)
+        {
+            float t = time / duration;
+            foreach (var p in parameters)
+            {
+                float start = startValues[p];
+                float end = -80f;
+                mixer.SetFloat(p, Mathf.Lerp(start, end, t));
+            }
+
+            time += Time.unscaledDeltaTime; // Ignores pause
+            yield return null;
+        }
+
+        // Force to silence at the very end
+        foreach (var p in parameters)
+            mixer.SetFloat(p, -80f);
     }
 }

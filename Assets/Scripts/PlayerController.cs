@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
     [Header("Health")]
     [SerializeField] HealthBar healthBar;
     [SerializeField] int currentHealth, maxHealth;
+    Flash flash;
+    bool invulnerable;
 
     [Header("Attacking")]
     [SerializeField] Weapon weapon;
@@ -97,12 +99,13 @@ public class PlayerController : MonoBehaviour
         anim = gameObject.GetComponent<Animator>();
         healthBar.Initialise(PlayerPrefs.GetInt("MaxHealth", 5));
         healthBar.UpdateHealth(currentHealth);
+        flash = GetComponent<Flash>();
         GameManager.Instance.runData.currentHealth = currentHealth;
     }
 
     private void FixedUpdate()
     {
-        if (isDashing || isLunging) return;
+        if (isDashing || isLunging || currentHealth <= 0) return;
 
         moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
 
@@ -261,10 +264,10 @@ public class PlayerController : MonoBehaviour
         anim.SetInteger("ComboStep", currentComboStep);
         anim.SetTrigger("LightAttack");
         AudioManager.PlaySound(AudioManager.SoundType.LIGHTATTACK1);
-        StartCoroutine(LungeCoroutine());
+        StartCoroutine(Lunge());
     }
 
-    private IEnumerator LungeCoroutine()
+    private IEnumerator Lunge()
     {
         float dir = facingRight ? 1f : -1f;
         isLunging = true;
@@ -286,7 +289,7 @@ public class PlayerController : MonoBehaviour
             // Play appropriate attack sound
             if (currentComboStep == 1)
             {
-                StartCoroutine(LungeCoroutine());
+                StartCoroutine(Lunge());
                 AudioManager.PlaySound(AudioManager.SoundType.LIGHTATTACK1);
             }
             else if (currentComboStep == 2)
@@ -321,7 +324,7 @@ public class PlayerController : MonoBehaviour
         heavyChargeTime = 0;
         isChargingHeavy = false;
         anim.SetTrigger("HeavyRelease");
-        StartCoroutine(LungeCoroutine());
+        StartCoroutine(Lunge());
         Debug.Log("Heavy attack!");
     }
 
@@ -353,15 +356,21 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (currentHealth <= 0 || invulnerable) return;
         currentHealth -= damage;
-        if (currentHealth < 0)
+        flash.DamageFlash();
+        healthBar.UpdateHealth(currentHealth);
+        if (currentHealth <= 0)
         {
-            currentHealth = 0;
-            GameManager.Instance.runData.currentHealth = currentHealth;
+            rb.linearVelocityX = 0;
             anim.SetTrigger("Death");
             StartCoroutine(GameManager.Instance.OnPlayerDeath());
         }
-        healthBar.UpdateHealth(currentHealth);
+    }
+
+    public void ToggleInvulnerable()
+    {
+        invulnerable = !invulnerable;
     }
 
     private void OnDestroy()

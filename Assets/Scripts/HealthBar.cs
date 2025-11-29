@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 public class HealthBar : MonoBehaviour
 {
-    [SerializeField] GameObject emptySegment;
-    [SerializeField] Sprite filledSegment;
-    readonly List<Image> segments = new();
+    [SerializeField] GameObject emptySegmentPrefab;
+    [SerializeField] Sprite emptySegment, filledSegment;
+    [SerializeField] List<Image> segments = new();
 
     public void Initialise(int maxHealth)
     {
@@ -17,7 +17,7 @@ public class HealthBar : MonoBehaviour
 
         for (int i = 0; i < maxHealth; i++)
         {
-            var segObj = Instantiate(emptySegment, transform);
+            var segObj = Instantiate(emptySegmentPrefab, transform);
             var img = segObj.GetComponent<Image>();
             segments.Add(img);
         }
@@ -28,6 +28,7 @@ public class HealthBar : MonoBehaviour
         for (int i = 0; i < segments.Count; i++)
         {
             if (i < currentHealth) segments[i].sprite = filledSegment;
+            else segments[i].sprite = emptySegment;
         }
     }
 }
