@@ -16,13 +16,16 @@ public class AudioManager : MonoBehaviour
 
     private void Update()
     {
-        float target = PlayerController.Instance.underwater ? underwaterCutoff : normalCutoff;
+        if (PlayerController.Instance)
+        {
+            float target = PlayerController.Instance.underwater ? underwaterCutoff : normalCutoff;
 
-        mixer.SetFloat("MusicLPF", Mathf.Lerp(
-            GetCurrentLPF("MusicLPF"), target, Time.deltaTime * 5f));
+            mixer.SetFloat("MusicLPF", Mathf.Lerp(
+                GetCurrentLPF("MusicLPF"), target, Time.deltaTime * 5f));
 
-        mixer.SetFloat("SfxLPF", Mathf.Lerp(
-            GetCurrentLPF("SfxLPF"), target, Time.deltaTime * 5f));
+            mixer.SetFloat("SfxLPF", Mathf.Lerp(
+                GetCurrentLPF("SfxLPF"), target, Time.deltaTime * 5f));
+        }
     }
 
     private float GetCurrentLPF(string param)
@@ -150,41 +153,23 @@ public class AudioManager : MonoBehaviour
         return default;
     }
 
-    public IEnumerator FadeOut(float duration)
+    public IEnumerator FadeTo(string mixerParam, float targetVolume, float duration)
     {
-        // Collect all exposed volume parameters on the mixer
-        var parameters = new List<string>
-        {
-            "MusicVolume",
-            "SfxVolume"
-        };
-
-        // Cache initial values
-        Dictionary<string, float> startValues = new();
-        foreach (var p in parameters)
-        {
-            mixer.GetFloat(p, out float v);
-            startValues[p] = v;
-        }
+        if (!mixer) yield break;
+        mixer.GetFloat(mixerParam, out float startVolume);
 
         float time = 0f;
-
         while (time < duration)
         {
             float t = time / duration;
-            foreach (var p in parameters)
-            {
-                float start = startValues[p];
-                float end = -80f;
-                mixer.SetFloat(p, Mathf.Lerp(start, end, t));
-            }
+            float newVolume = Mathf.Lerp(startVolume, targetVolume, t);
 
-            time += Time.unscaledDeltaTime; // Ignores pause
+            mixer.SetFloat(mixerParam, newVolume);
+
+            time += Time.unscaledDeltaTime;
             yield return null;
         }
 
-        // Force to silence at the very end
-        foreach (var p in parameters)
-            mixer.SetFloat(p, -80f);
+        mixer.SetFloat(mixerParam, targetVolume);
     }
 }

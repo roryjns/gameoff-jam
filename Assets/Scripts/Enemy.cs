@@ -45,11 +45,12 @@ public class Enemy : MonoBehaviour
     AudioSource idleAudioSource;
 
     [Header("Movement")]
-    [SerializeField] float moveSpeed, fallCheckRadius;
-    [SerializeField] float chaseRange, strafeRange, attackRange, strafeJitter, knockbackForce;
-    [SerializeField] Transform groundCheck;
-    float idleFlipTimer = 2f, strafeTargetX, strafeChangeTimer;
+    [SerializeField] float moveSpeed, ledgeCheckDistance;
+    [SerializeField] float chaseRange, strafeRange, attackRange, knockbackForce;
+    float idleFlipTimer = 2f, strafeTargetX, strafeChangeTimer, strafeFixCooldown;
+    int lastStrafeDir = 1;
     bool facingRight = true;
+    Vector2 targetPos;
 
     [Header("Health")]
     [SerializeField] int currentHealth;
@@ -133,89 +134,75 @@ public class Enemy : MonoBehaviour
             idleFlipTimer = 2f;
         }
 
-        if (dist < chaseRange)
-        {
-            Vector2 direction = facingRight ? Vector2.right : Vector2.left;
+        if (dist < chaseRange && CanSeePlayer(dist)) currentState = State.Chase;
+    }
 
-            RaycastHit2D hit = Physics2D.Raycast(
-                (Vector2) transform.position + Vector2.up,
-                direction,
-                dist,
-                LayerMask.GetMask("Default", "Ground")
-            );
-
-            if (hit.collider && hit.collider.CompareTag("Player")) currentState = State.Chase;
-        }
+    private bool MoveTowardsX(float targetX)
+    {
+        if (!idleAudioSource.isPlaying) idleAudioSource.Play();
+        float direction = Mathf.Sign(targetX - transform.position.x);
+        if (direction == 0f) return true;
+        targetPos = new (transform.position.x + direction * moveSpeed * Time.fixedDeltaTime, rb.position.y);
+        if (direction > 0 && !facingRight) Flip();
+        else if (direction < 0 && facingRight) Flip();
+        if (IsAboutToFall(targetPos)) return false;
+        rb.MovePosition(targetPos);
+        return true;
     }
 
     private void HandleChase()
     {
-        if (!idleAudioSource.isPlaying) idleAudioSource.Play();
-
-        float targetVelocity = Mathf.Sign(player.position.x - transform.position.x) * moveSpeed;
-        rb.linearVelocityX = Mathf.MoveTowards(rb.linearVelocityX, targetVelocity, Time.fixedDeltaTime);
-
-        if (IsAboutToFall()) rb.linearVelocityX = 0;
-
-        if ((rb.linearVelocityX > 0 && !facingRight) || (rb.linearVelocityX < 0 && facingRight)) Flip();
-
+        MoveTowardsX(player.transform.position.x);
         float dist = Vector2.Distance(transform.position, player.position);
-
         if (dist < attackRange) SelectAttack();
         else if (dist < strafeRange) currentState = State.Strafe;
-        else if (dist > chaseRange)
-        {
-            rb.linearVelocityX = 0;
-            currentState = State.Idle;
-        }
+        else if (dist > chaseRange) currentState = State.Idle;
     }
 
     private void HandleStrafe()
     {
-        if (!idleAudioSource.isPlaying) idleAudioSource.Play();
+        strafeChangeTimer -= Time.fixedDeltaTime;
+        strafeFixCooldown -= Time.fixedDeltaTime;
 
-        strafeChangeTimer -= Time.deltaTime;
-        if (strafeChangeTimer <= 0f)
+        if (strafeChangeTimer <= 0f || Mathf.Abs(transform.position.x - strafeTargetX) < 0.1f)
         {
-            float dir = (Random.value > 0.5f) ? 1f : -1f;
-            strafeTargetX = player.position.x + dir * strafeJitter;
-            strafeChangeTimer = 0.7f;
+            lastStrafeDir *= -1;
+            strafeTargetX = player.position.x + (lastStrafeDir * 2.5f);
+            strafeChangeTimer = 1f;
         }
 
-        float targetVelocity = Mathf.Sign(strafeTargetX - transform.position.x) * moveSpeed;
-        rb.linearVelocityX = Mathf.MoveTowards(rb.linearVelocityX, targetVelocity, Time.fixedDeltaTime);
+        bool moved = MoveTowardsX(strafeTargetX);
 
-        if (IsAboutToFall()) rb.linearVelocityX = 0;
-
-        float playerDir = Mathf.Sign(player.position.x - transform.position.x);
-        if ((playerDir > 0 && !facingRight) || playerDir < 0 && facingRight) Flip();
+        if (!moved && strafeFixCooldown <= 0f)
+        {
+            lastStrafeDir *= -1;
+            strafeTargetX = transform.position.x + (lastStrafeDir * 2.5f);
+            strafeFixCooldown = strafeChangeTimer = 0.6f;
+        }
 
         float dist = Vector2.Distance(transform.position, player.position);
-
-        if (dist <= attackRange)
-        {
-            rb.linearVelocityX = 0;
-            SelectAttack();
-        }
-        else if (dist > strafeRange * 1.4f)
-        {
-            rb.linearVelocityX = 0;
-            currentState = State.Chase;
-        }
-        else if (dist > chaseRange)
-        {
-            rb.linearVelocityX = 0;
-            currentState = State.Idle;
-        }
+        if (dist <= attackRange) SelectAttack();
+        else if (dist > strafeRange + 3f) currentState = State.Chase;
+        else if (dist > chaseRange) currentState = State.Idle;
     }
 
-    private bool IsAboutToFall()
+    private bool IsAboutToFall(Vector2 targetPos)
     {
-        float moveDir = Mathf.Sign(rb.linearVelocityX);
-        if (moveDir == 0) moveDir = facingRight ? 1 : -1;
-        Vector2 checkPos = (Vector2)transform.position + Vector2.right * moveDir;
-        bool groundAhead = Physics2D.OverlapCircle(checkPos, fallCheckRadius, LayerMask.GetMask("Ground"));
-        return !groundAhead;
+        return Physics2D.OverlapCircle(targetPos + Vector2.down * 0.4f, ledgeCheckDistance);
+    }
+
+    private bool CanSeePlayer(float dist)
+    {
+        Vector2 direction = facingRight ? Vector2.right : Vector2.left;
+
+        RaycastHit2D hit = Physics2D.Raycast(
+            (Vector2)transform.position + Vector2.up,
+            direction,
+            dist,
+            LayerMask.GetMask("Default", "Ground")
+        );
+
+        return hit.collider && hit.collider.CompareTag("Player");
     }
 
     private void SelectAttack()
@@ -288,6 +275,9 @@ public class Enemy : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(targetPos + Vector2.down * 0.4f, ledgeCheckDistance);
+
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, chaseRange);
 

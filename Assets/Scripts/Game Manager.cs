@@ -38,8 +38,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        // Generate level
         StartCoroutine(FadeCanvas(blankCanvas, 0f, 0.5f)); // Fade from black
+        StartCoroutine(AudioManager.Instance.FadeTo("MusicVolume", 0f, 2f));
     }
 
     public void OrbCollected()
@@ -62,19 +62,17 @@ public class GameManager : MonoBehaviour
 
     public void RestartRun()
     {
-        AudioManager.PlaySound(AudioManager.SoundType.UICONFIRM);
         StartCoroutine(LoadScene(1));
-
     }
+
     public void ExitToMenu()
     {
-        AudioManager.PlaySound(AudioManager.SoundType.UIBACK);
         StartCoroutine(LoadScene(0));
     }
 
     private IEnumerator LoadScene(int sceneIndex)
     {
-        yield return FadeCanvas(blankCanvas, 1f, 2f);
+        yield return FadeCanvas(blankCanvas, 1f, 1f);
         SceneManager.LoadScene(sceneIndex);
     }
 
@@ -83,7 +81,8 @@ public class GameManager : MonoBehaviour
         deathText.gameObject.SetActive(true);
         PlayerController.Instance.playerInput.SwitchCurrentActionMap("UI");
         EventSystem.current.SetSelectedGameObject(gameOverFirst);
-        StartCoroutine(AudioManager.Instance.FadeOut(3f));
+        StartCoroutine(AudioManager.Instance.FadeTo("MusicVolume", -80f, 2f));
+        StartCoroutine(AudioManager.Instance.FadeTo("SfxVolume", -80f, 1f));
         yield return FadeCanvas(deathCanvas, 1f, 2f);
         ObjectPooler.Instance.ClearAllPools();
     }

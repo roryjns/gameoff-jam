@@ -293,7 +293,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.10943389, g: 0.10943389, b: 0.10943389, a: 0}
+  m_BackGroundColor: {r: 0, g: 0.0627451, b: 0.10943389, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1050,37 +1050,6 @@ ParticleSystemForceField:
         m_RotationOrder: 4
     m_MultiplyDragByParticleSize: 1
     m_MultiplyDragByParticleVelocity: 1
---- !u!1 &860241666
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 860241667}
-  m_Layer: 0
-  m_Name: Ground check
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &860241667
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 860241666}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.2, y: 0.2, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1813802229}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &867393901 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8523802456424575007, guid: 3283a1a3981bfa446a36c1fe2f58c595, type: 3}
@@ -2677,7 +2646,7 @@ MonoBehaviour:
   m_ScrollWheelAction: {fileID: 653369926}
   m_TrackedDevicePositionAction: {fileID: 1169322818}
   m_TrackedDeviceOrientationAction: {fileID: 1260206160}
-  m_DeselectOnBackgroundClick: 1
+  m_DeselectOnBackgroundClick: 0
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
   m_ScrollDeltaPerTick: 6
@@ -2767,6 +2736,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3233248916227443373, guid: 2a43a82a63385b948b16918a1e4278d3, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5459420046623246050, guid: 2a43a82a63385b948b16918a1e4278d3, type: 3}
       propertyPath: m_Name
       value: AudioManager
@@ -2937,7 +2910,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 0.4}
+  m_Size: {x: 1.2, y: 0.4}
   m_EdgeRadius: 0
 --- !u!1001 &1762501533
 PrefabInstance:
@@ -3186,6 +3159,10 @@ PrefabInstance:
       propertyPath: volume
       value: 
       objectReference: {fileID: 1252824982}
+    - target: {fileID: 1633746979387871855, guid: 3283a1a3981bfa446a36c1fe2f58c595, type: 3}
+      propertyPath: m_BlocksRaycasts
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1929972853041830994, guid: 3283a1a3981bfa446a36c1fe2f58c595, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -3214,6 +3191,22 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 351625822}
+    - target: {fileID: 2455410592644012901, guid: 3283a1a3981bfa446a36c1fe2f58c595, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2658029159854346985, guid: 3283a1a3981bfa446a36c1fe2f58c595, type: 3}
+      propertyPath: m_Color.b
+      value: 0.07169801
+      objectReference: {fileID: 0}
+    - target: {fileID: 2658029159854346985, guid: 3283a1a3981bfa446a36c1fe2f58c595, type: 3}
+      propertyPath: m_Color.g
+      value: 0.06902999
+      objectReference: {fileID: 0}
+    - target: {fileID: 2658029159854346985, guid: 3283a1a3981bfa446a36c1fe2f58c595, type: 3}
+      propertyPath: m_Color.r
+      value: 0.023673864
+      objectReference: {fileID: 0}
     - target: {fileID: 2958261718959513060, guid: 3283a1a3981bfa446a36c1fe2f58c595, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -3784,11 +3777,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
       propertyPath: moveSpeed
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
       propertyPath: chaseRange
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
+      propertyPath: ledgeCheck
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
       propertyPath: underwater
@@ -3796,19 +3793,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
       propertyPath: attackRange
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
       propertyPath: groundCheck
       value: 
-      objectReference: {fileID: 860241667}
+      objectReference: {fileID: 0}
     - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
       propertyPath: orbsDropped
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
       propertyPath: strafeRange
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
       propertyPath: acceleration
@@ -3859,12 +3856,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1813802235}
     - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
+      propertyPath: ledgeCheckRadius
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
       propertyPath: groundCheckRadius
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
       propertyPath: attacks.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
+      propertyPath: ledgeCheckDistance
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 3010811688983718142, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
       propertyPath: attacks.Array.data[0].damage
@@ -3975,9 +3980,6 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4960658673189106260, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 860241667}
-    - targetCorrespondingSourceObject: {fileID: 4960658673189106260, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1740275289}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 795873919123051534, guid: d08f02b64061d974ebb535ce5fc41a71, type: 3}
@@ -4084,6 +4086,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 950215712439023519, guid: 886ac00b6c643b040a89970449ac7599, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1296411390385225153, guid: 886ac00b6c643b040a89970449ac7599, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4128,6 +4134,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1763374767}
+    - target: {fileID: 3694026631501375805, guid: 886ac00b6c643b040a89970449ac7599, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5395190743280788407, guid: 886ac00b6c643b040a89970449ac7599, type: 3}
       propertyPath: player
       value: 
@@ -4173,6 +4183,7 @@ SceneRoots:
   - {fileID: 1252824983}
   - {fileID: 1274992655}
   - {fileID: 351625823}
+  - {fileID: 1691267670}
   - {fileID: 715089455065659022}
   - {fileID: 3876663285451963208}
   - {fileID: 1704825573}
@@ -4180,4 +4191,3 @@ SceneRoots:
   - {fileID: 2379512689312900089}
   - {fileID: 7574703534474494810}
   - {fileID: 1762501533}
-  - {fileID: 1691267670}
