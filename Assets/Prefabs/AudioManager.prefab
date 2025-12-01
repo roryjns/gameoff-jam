@@ -242,11 +242,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
   sounds:
   - type: 0
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: f46a064989b60064d9839129355d9412, type: 3}
     clips: []
     defaultVolume: 1
   - type: 1
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 723d30a80bf05a24eb662cc75d63655b, type: 3}
     clips: []
     defaultVolume: 1
   - type: 2
@@ -323,8 +323,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 885cc22ccc85a584b93d7b2d448522dd, type: 3}
     clips: []
     defaultVolume: 1
-  - type: 17
-    clip: {fileID: 8300000, guid: 885cc22ccc85a584b93d7b2d448522dd, type: 3}
+  - type: 18
+    clip: {fileID: 8300000, guid: eabf57c84414dc141a3e2c5513ef6fed, type: 3}
     clips: []
     defaultVolume: 1
   sfxSource: {fileID: 2954744814264344927}

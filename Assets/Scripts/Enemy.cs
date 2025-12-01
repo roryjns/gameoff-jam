@@ -4,7 +4,8 @@ using System.Collections;
 [System.Serializable]
 public class EnemyAttack
 {
-    public float windupTime, attackTime, recoveryTime;
+    public string animationTrigger;
+    public float windupTime, attackTime;
     [SerializeField] int damage;
     [SerializeField] Collider2D hitbox;
 
@@ -43,6 +44,7 @@ public class Enemy : MonoBehaviour
     Animator anim;
     Transform player;
     AudioSource idleAudioSource;
+    Collider2D coll;
 
     [Header("Movement")]
     [SerializeField] float moveSpeed, ledgeCheckDistance;
@@ -55,9 +57,11 @@ public class Enemy : MonoBehaviour
     [Header("Health")]
     [SerializeField] int currentHealth;
     [SerializeField] int maxHealth, baseOrbsDropped;
+    [SerializeField] BossHealthBar healthBar;
     Flash flash;
 
     [Header("Attacking")]
+    [SerializeField] float recoveryTime;
     [SerializeField] EnemyAttack[] attacks;
     EnemyAttack currentAttack;
 
@@ -66,8 +70,10 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         player = GameObject.FindWithTag("Player").transform;
-        flash = GetComponent<Flash>();
         idleAudioSource = GetComponent<AudioSource>();
+        coll = GetComponent<Collider2D>();
+        if (healthBar) healthBar.Initialise(currentHealth);
+        flash = GetComponent<Flash>();
         
         // Start playing idle sound on loop
         if (idleAudioSource != null && AudioManager.Instance != null)
@@ -91,26 +97,27 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        switch (currentState)
+        if (currentHealth > 0)
         {
-            case State.Idle:
-                HandleIdle();
-                break;
-            case State.Chase:
-                HandleChase();
-                break;
-            case State.Strafe:
-                HandleStrafe();
-                break;
-            case State.Windup:
-                break;
-            case State.Attack:
-                break;
-            case State.Recovery:
-                break;
-        }
-
-        anim.SetBool("Moving", rb.linearVelocityX * rb.linearVelocityX > 0f);
+            switch (currentState)
+            {
+                case State.Idle:
+                    HandleIdle();
+                    break;
+                case State.Chase:
+                    HandleChase();
+                    break;
+                case State.Strafe:
+                    HandleStrafe();
+                    break;
+                case State.Windup:
+                    break;
+                case State.Attack:
+                    break;
+                case State.Recovery:
+                    break;
+            }
+        }        
     }
 
     private void Flip()
@@ -123,9 +130,9 @@ public class Enemy : MonoBehaviour
 
     private void HandleIdle()
     {
-        if (!idleAudioSource.isPlaying) idleAudioSource.Play();
+        anim.SetBool("Moving", false);
 
-        float dist = Vector2.Distance(transform.position, player.position);
+        if (idleAudioSource && !idleAudioSource.isPlaying) idleAudioSource.Play();
 
         idleFlipTimer -= Time.deltaTime;
         if (idleFlipTimer <= 0f)
@@ -134,25 +141,27 @@ public class Enemy : MonoBehaviour
             idleFlipTimer = 2f;
         }
 
+        float dist = Vector2.Distance(transform.position, player.position);
         if (dist < chaseRange && CanSeePlayer(dist)) currentState = State.Chase;
     }
 
     private bool MoveTowardsX(float targetX)
     {
-        if (!idleAudioSource.isPlaying) idleAudioSource.Play();
+        if (idleAudioSource && !idleAudioSource.isPlaying) idleAudioSource.Play();
         float direction = Mathf.Sign(targetX - transform.position.x);
         if (direction == 0f) return true;
-        targetPos = new (transform.position.x + direction * moveSpeed * Time.fixedDeltaTime, rb.position.y);
+        targetX = transform.position.x + direction * moveSpeed * Time.fixedDeltaTime;
         if (direction > 0 && !facingRight) Flip();
         else if (direction < 0 && facingRight) Flip();
-        if (IsAboutToFall(targetPos)) return false;
+        if (IsAboutToFall(targetX)) return false;
+        targetPos = new(targetX, rb.position.y);
         rb.MovePosition(targetPos);
         return true;
     }
 
     private void HandleChase()
     {
-        MoveTowardsX(player.transform.position.x);
+        anim.SetBool("Moving", MoveTowardsX(player.transform.position.x));
         float dist = Vector2.Distance(transform.position, player.position);
         if (dist < attackRange) SelectAttack();
         else if (dist < strafeRange) currentState = State.Strafe;
@@ -172,6 +181,7 @@ public class Enemy : MonoBehaviour
         }
 
         bool moved = MoveTowardsX(strafeTargetX);
+        anim.SetBool("Moving", moved);
 
         if (!moved && strafeFixCooldown <= 0f)
         {
@@ -186,9 +196,10 @@ public class Enemy : MonoBehaviour
         else if (dist > chaseRange) currentState = State.Idle;
     }
 
-    private bool IsAboutToFall(Vector2 targetPos)
+    private bool IsAboutToFall(float targetX)
     {
-        return Physics2D.OverlapCircle(targetPos + Vector2.down * 0.4f, ledgeCheckDistance);
+        Vector2 fallCheckPos = new(targetX, coll.bounds.min.y - 0.4f);
+        return Physics2D.OverlapCircle(fallCheckPos, ledgeCheckDistance);
     }
 
     private bool CanSeePlayer(float dist)
@@ -196,7 +207,7 @@ public class Enemy : MonoBehaviour
         Vector2 direction = facingRight ? Vector2.right : Vector2.left;
 
         RaycastHit2D hit = Physics2D.Raycast(
-            (Vector2)transform.position + Vector2.up,
+            (Vector2)transform.position + Vector2.up * 0.1f,
             direction,
             dist,
             LayerMask.GetMask("Default", "Ground")
@@ -207,24 +218,29 @@ public class Enemy : MonoBehaviour
 
     private void SelectAttack()
     {
-        idleAudioSource.Stop();
+        if (idleAudioSource) idleAudioSource.Stop();
         currentAttack = attacks[Random.Range(0, attacks.Length)];
         StartCoroutine(Attack());
     }
 
     private IEnumerator Attack()
     {
-        anim.SetTrigger("Attack");
         currentState = State.Windup;
+        anim.SetBool("Moving", false);
         AudioManager.PlaySound(AudioManager.SoundType.ENEMYWINDUP);
         yield return new WaitForSeconds(currentAttack.windupTime);
 
         currentState = State.Attack;
-        AudioManager.PlaySound(AudioManager.SoundType.ENEMYATTACK);
+        anim.SetTrigger(currentAttack.animationTrigger);
         yield return new WaitForSeconds(currentAttack.attackTime);
 
+        AudioManager.PlaySound(AudioManager.SoundType.ENEMYATTACK);
         currentState = State.Recovery;
-        yield return new WaitForSeconds(currentAttack.recoveryTime);
+        yield return new WaitForSeconds(recoveryTime);
+
+        float direction = Mathf.Sign(player.position.x - transform.position.x);
+        if (direction > 0 && !facingRight) Flip();
+        else if (direction < 0 && facingRight) Flip();
 
         float dist = Vector2.Distance(transform.position, player.position);
         if (dist <= attackRange) SelectAttack();
@@ -246,37 +262,51 @@ public class Enemy : MonoBehaviour
     {
         if (currentHealth <= 0) return;
         currentHealth -= damage;
+        if (healthBar) healthBar.UpdateSlider(currentHealth);
         flash.DamageFlash();
         AudioManager.PlaySound(AudioManager.SoundType.PLAYERHIT);
-        currentState = State.Strafe;
+        if (currentState == State.Idle) currentState = State.Strafe;
         float playerDir = Mathf.Sign(player.position.x - transform.position.x);
-        rb.linearVelocityX += -playerDir * knockbackForce;
+        rb.linearVelocityX = -playerDir * knockbackForce;
+        StartCoroutine(ResetVelocity());
         if (currentHealth <= 0) StartCoroutine(Die());
     }
 
-    IEnumerator Die()
+    private IEnumerator ResetVelocity()
+    {
+        yield return new WaitForSeconds(0.5f);
+        rb.linearVelocityX = 0;
+    }
+
+    private IEnumerator Die()
     {
         anim.SetTrigger("Death");
-        idleAudioSource.Stop();
+        if (idleAudioSource) idleAudioSource.Stop();
         AudioManager.PlaySound(AudioManager.SoundType.ENEMYDEATH);
         yield return null; // Wait a frame for animator to update
         yield return new WaitForSeconds(anim.GetCurrentAnimatorClipInfo(0).Length);
 
-        var orbObject = ObjectPooler.Instance.GetFromPool("Orbs", transform.position + Vector3.up, Quaternion.identity);
-        Orbs orbs = orbObject.GetComponent<Orbs>();
-
-        if (underwater) orbs.SetOrbCount(baseOrbsDropped * 2);
-        else orbs.SetOrbCount(baseOrbsDropped);
+        if (baseOrbsDropped > 0 && ObjectPooler.Instance)
+        {
+            var orbObject = ObjectPooler.Instance.GetFromPool("Orbs", transform.position + Vector3.up, Quaternion.identity);
+            Orbs orbs = orbObject.GetComponent<Orbs>();
+            if (underwater) orbs.SetOrbCount(baseOrbsDropped * 2);
+            else orbs.SetOrbCount(baseOrbsDropped);
+        }
 
         GameManager.Instance.EnemyDied(this);
-
-        gameObject.SetActive(false);
+        if (healthBar == null) gameObject.SetActive(false);
+        else StartCoroutine(GameManager.Instance.BossDefeated());
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(targetPos + Vector2.down * 0.4f, ledgeCheckDistance);
+        if (targetPos != null && coll != null)
+        {
+            Gizmos.color = Color.blue;
+            Vector2 fallCheckPos = new(targetPos.x, coll.bounds.min.y - 0.4f);
+            Gizmos.DrawWireSphere(fallCheckPos, ledgeCheckDistance);
+        }
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, chaseRange);

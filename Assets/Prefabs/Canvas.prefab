@@ -2850,7 +2850,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 60, y: -60}
-  m_SizeDelta: {x: 700, y: 40}
+  m_SizeDelta: {x: 30, y: 40}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &3511208388482220821
 MonoBehaviour:
@@ -2890,8 +2890,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa6ff726462a97f4191f6f3c1e78e724, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthBar
+  emptySegmentPrefab: {fileID: 0}
   emptySegment: {fileID: 2958102113227688908, guid: 36b32657bda4a77419aec04d3456e3be, type: 3}
   filledSegment: {fileID: 8633951887583426945, guid: 5a63b2379aceabc4c80cdd99578e5a1d, type: 3}
+  segments: []
 --- !u!1 &6067354802115929238
 GameObject:
   m_ObjectHideFlags: 0

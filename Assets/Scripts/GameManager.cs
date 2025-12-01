@@ -3,8 +3,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-using TMPro;
-using System.Collections;
 using System;
 
 public class GameManager : MonoBehaviour
@@ -12,7 +10,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     public event EventHandler<Enemy> OnEnemyDeath;
 
-    [System.Serializable]
+    [Serializable]
     public class RunData // Data that is lost upon closing the game or dying
     {
         public int currentHealth;
@@ -30,7 +28,6 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
             Destroy(gameObject);
@@ -84,7 +81,13 @@ public class GameManager : MonoBehaviour
         StartCoroutine(AudioManager.Instance.FadeTo("MusicVolume", -80f, 2f));
         StartCoroutine(AudioManager.Instance.FadeTo("SfxVolume", -80f, 1f));
         yield return FadeCanvas(deathCanvas, 1f, 2f);
-        ObjectPooler.Instance.ClearAllPools();
+        if (ObjectPooler.Instance) ObjectPooler.Instance.ClearAllPools();
+    }
+
+    public IEnumerator BossDefeated()
+    {
+        StartCoroutine(AudioManager.Instance.FadeTo("MusicVolume", -80f, 3f));
+        yield return null;
     }
 
     private IEnumerator FadeCanvas(CanvasGroup canvas, float targetAlpha, float duration)

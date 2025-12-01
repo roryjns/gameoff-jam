@@ -40,9 +40,6 @@ public class PauseMenu : MonoBehaviour
         pauseMenu.SetActive(isPaused);
         Time.timeScale = isPaused ? 0 : 1;
 
-        //if (isPaused) AudioManager.PlaySound(AudioManager.SoundType.UICONFIRM);
-        //else AudioManager.PlaySound(AudioManager.SoundType.UIBACK);
-
         if (isPaused && pauseMenuFirst != null)
         {
             dof.active = true;
@@ -66,7 +63,6 @@ public class PauseMenu : MonoBehaviour
         {
             optionsMenu.SetActive(false);
             pauseMenu.SetActive(true);
-            //AudioManager.PlaySound(AudioManager.SoundType.UIBACK);
             EventSystem.current.SetSelectedGameObject(pauseMenuFirst);
         }
     }
@@ -76,7 +72,6 @@ public class PauseMenu : MonoBehaviour
         pauseMenu.SetActive(false);
         optionsMenu.SetActive(true);
         EventSystem.current.SetSelectedGameObject(optionsMenuFirst);
-        //AudioManager.PlaySound(AudioManager.SoundType.UICONFIRM);
     }
 
     public void UpdateOptions()
@@ -84,7 +79,6 @@ public class PauseMenu : MonoBehaviour
         PlayerPrefs.SetFloat("ControllerDeadzone", controllerDeadzoneSlider.value * 0.05f); // Maps 0-10 to 0 to 0.5
         PlayerPrefs.SetFloat("SfxVolume", sfxSlider.value * 0.1f);
         PlayerPrefs.SetFloat("MusicVolume", musicSlider.value * 0.1f);
-        //AudioManager.PlaySound(AudioManager.SoundType.UICONFIRM);
         ApplyOptions();
     }
 

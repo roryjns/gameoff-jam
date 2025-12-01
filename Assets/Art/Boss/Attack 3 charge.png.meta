@@ -1,13 +1,19 @@
 fileFormatVersion: 2
-guid: 06796a04a4f289c418a6046c3efc824a
+guid: bb4d570b6ab33b34d8e6eedb19997017
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8699262378195685336
-    second: Icon_35_0
+      213: -4913155488674122577
+    second: mid-Attack 3_0
   - first:
-      213: -7925758075834535111
-    second: Icon_35_1
+      213: -7293407576812649044
+    second: mid-Attack 3_1
+  - first:
+      213: -4594664584941787178
+    second: mid-Attack 3_2
+  - first:
+      213: -6022025505227168932
+    second: mid-Attack 3_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,12 +55,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -75,7 +81,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -116,13 +122,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Icon_35_0
+      name: mid-Attack 3_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 4
-        width: 9
-        height: 8
+        x: 86
+        y: 3
+        width: 46
+        height: 47
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -131,20 +137,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 820f9bb25f2064780800000000000000
-      internalID: -8699262378195685336
+      spriteID: fa471533d17f0dbb0800000000000000
+      internalID: -4913155488674122577
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icon_35_1
+      name: mid-Attack 3_1
       rect:
         serializedVersion: 2
-        x: 5
-        y: 1
-        width: 10
-        height: 14
+        x: 333
+        y: 3
+        width: 46
+        height: 48
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,8 +159,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 933f232c50d020290800000000000000
-      internalID: -7925758075834535111
+      spriteID: ca580f5737c98ca90800000000000000
+      internalID: -7293407576812649044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mid-Attack 3_2
+      rect:
+        serializedVersion: 2
+        x: 579
+        y: 3
+        width: 47
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d72a7057e87c30c0800000000000000
+      internalID: -4594664584941787178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mid-Attack 3_3
+      rect:
+        serializedVersion: 2
+        x: 825
+        y: 1
+        width: 48
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c53a79485b77d6ca0800000000000000
+      internalID: -6022025505227168932
       vertices: []
       indices: 
       edges: []
@@ -163,7 +213,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -173,8 +223,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Icon_35_0: -8699262378195685336
-      Icon_35_1: -7925758075834535111
+      mid-Attack 3_0: -4913155488674122577
+      mid-Attack 3_1: -7293407576812649044
+      mid-Attack 3_2: -4594664584941787178
+      mid-Attack 3_3: -6022025505227168932
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

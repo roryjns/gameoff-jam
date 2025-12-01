@@ -76,8 +76,8 @@ public class PlayerController : MonoBehaviour
         playerInput.actions["Jump"].performed += ctx => jumpBufferCounter = jumpBufferTime;
         playerInput.actions["Dash"].performed += OnDash;
         playerInput.actions["Light Attack"].started += OnLightAttack;
-        playerInput.actions["Heavy Attack"].started += OnHeavyAttackBegin;
-        playerInput.actions["Heavy Attack"].canceled += OnHeavyAttackRelease;
+        //playerInput.actions["Heavy Attack"].started += OnHeavyAttackBegin;
+        //playerInput.actions["Heavy Attack"].canceled += OnHeavyAttackRelease;
         playerInput.actions["Pause"].performed += pauseMenu.OnTogglePause;
         playerInput.actions["Cancel"].performed += pauseMenu.OnMenuClose;
     }
@@ -87,8 +87,8 @@ public class PlayerController : MonoBehaviour
         playerInput.actions["Jump"].performed -= ctx => jumpBufferCounter = jumpBufferTime;
         playerInput.actions["Dash"].performed -= OnDash;
         playerInput.actions["Light Attack"].started -= OnLightAttack;
-        playerInput.actions["Heavy Attack"].started -= OnHeavyAttackBegin;
-        playerInput.actions["Heavy Attack"].canceled -= OnHeavyAttackRelease;
+        //playerInput.actions["Heavy Attack"].started -= OnHeavyAttackBegin;
+        //playerInput.actions["Heavy Attack"].canceled -= OnHeavyAttackRelease;
         playerInput.actions["Pause"].performed -= pauseMenu.OnTogglePause;
         playerInput.actions["Cancel"].performed -= pauseMenu.OnMenuClose;
     }
@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
         anim = gameObject.GetComponent<Animator>();
-        healthBar.Initialise(PlayerPrefs.GetInt("MaxHealth", 5));
+        healthBar.Initialise(maxHealth);
         healthBar.UpdateHealth(currentHealth);
         flash = GetComponent<Flash>();
         GameManager.Instance.runData.currentHealth = currentHealth;
