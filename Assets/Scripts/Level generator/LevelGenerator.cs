@@ -104,6 +104,7 @@ public class LevelGenerator : MonoBehaviour
                 for (int y = 0; y < ChunkHeight; y++)
                 {
                     SetTile(xChunk + offset.x, NumChunksHigh + offset.y, x, y, RuleTile);
+                    SetTile(xChunk + offset.x, -1 + offset.y, x, y, RuleTile);
                 }
             }
         }
