@@ -69,7 +69,15 @@ public class Enemy : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        player = GameObject.FindWithTag("Player").transform;
+        GameObject playerObj = GameObject.FindWithTag("Player");
+        if (playerObj != null)
+        {
+            player = playerObj.transform;
+        }
+        else
+        {
+            Debug.LogWarning($"Enemy {gameObject.name} couldn't find Player on Start. Will retry in FixedUpdate.");
+        }
         idleAudioSource = GetComponent<AudioSource>();
         coll = GetComponent<Collider2D>();
         if (healthBar) healthBar.Initialise(currentHealth);
@@ -97,6 +105,20 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Retry finding player if we didn't find it on Start
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.transform;
+            }
+            else
+            {
+                return; // Can't do AI without a player reference
+            }
+        }
+
         if (currentHealth > 0)
         {
             switch (currentState)
@@ -134,13 +156,14 @@ public class Enemy : MonoBehaviour
 
         if (idleAudioSource && !idleAudioSource.isPlaying) idleAudioSource.Play();
 
-        idleFlipTimer -= Time.deltaTime;
+        idleFlipTimer -= Time.fixedDeltaTime;
         if (idleFlipTimer <= 0f)
         {
             Flip();
             idleFlipTimer = 2f;
         }
 
+        if (player == null) return;
         float dist = Vector2.Distance(transform.position, player.position);
         if (dist < chaseRange && CanSeePlayer(dist)) currentState = State.Chase;
     }
@@ -153,7 +176,6 @@ public class Enemy : MonoBehaviour
         targetX = transform.position.x + direction * moveSpeed * Time.fixedDeltaTime;
         if (direction > 0 && !facingRight) Flip();
         else if (direction < 0 && facingRight) Flip();
-        Debug.Log(IsAboutToFall(targetX));
         if (IsAboutToFall(targetX)) return false;
         targetPos = new(targetX, rb.position.y);
         rb.MovePosition(targetPos);
@@ -162,6 +184,7 @@ public class Enemy : MonoBehaviour
 
     private void HandleChase()
     {
+        if (player == null) return;
         anim.SetBool("Moving", MoveTowardsX(player.transform.position.x));
         float dist = Vector2.Distance(transform.position, player.position);
         if (dist < attackRange) SelectAttack();
@@ -171,6 +194,8 @@ public class Enemy : MonoBehaviour
 
     private void HandleStrafe()
     {
+        if (player == null) return;
+        
         strafeChangeTimer -= Time.fixedDeltaTime;
         strafeFixCooldown -= Time.fixedDeltaTime;
 
@@ -200,7 +225,7 @@ public class Enemy : MonoBehaviour
     private bool IsAboutToFall(float targetX)
     {
         Vector2 fallCheckPos = new(targetX, coll.bounds.min.y - 0.4f);
-        return Physics2D.OverlapCircle(fallCheckPos, ledgeCheckDistance);
+        return !Physics2D.OverlapCircle(fallCheckPos, ledgeCheckDistance);
     }
 
     private bool CanSeePlayer(float dist)
@@ -239,13 +264,20 @@ public class Enemy : MonoBehaviour
         currentState = State.Recovery;
         yield return new WaitForSeconds(recoveryTime);
 
-        float direction = Mathf.Sign(player.position.x - transform.position.x);
-        if (direction > 0 && !facingRight) Flip();
-        else if (direction < 0 && facingRight) Flip();
+        if (player != null)
+        {
+            float direction = Mathf.Sign(player.position.x - transform.position.x);
+            if (direction > 0 && !facingRight) Flip();
+            else if (direction < 0 && facingRight) Flip();
 
-        float dist = Vector2.Distance(transform.position, player.position);
-        if (dist <= attackRange) SelectAttack();
-        else currentState = State.Chase;
+            float dist = Vector2.Distance(transform.position, player.position);
+            if (dist <= attackRange) SelectAttack();
+            else currentState = State.Chase;
+        }
+        else
+        {
+            currentState = State.Idle;
+        }
     }
 
     public void ToggleHitbox()

@@ -20,6 +20,7 @@ public class TidalWave : MonoBehaviour
     float interactableStartHeight, riseDuration, holdDuration, fallDuration;
 
     internal event EventHandler OnWaveCrash;
+    internal event EventHandler OnWaveStart;
     internal static TidalWave Instance;
 
     private void Awake()
@@ -93,6 +94,7 @@ public class TidalWave : MonoBehaviour
                     interactableWater.gameObject.SetActive(false);
                     player.underwater = false;
                 }
+                OnWaveStart?.Invoke(this, null);
             }
             return;
         }
