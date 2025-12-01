@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
-using static UnityEditor.PlayerSettings;
 public class LevelGenerator : MonoBehaviour
 {
     public static LevelGenerator Instance = null;
@@ -19,15 +17,14 @@ public class LevelGenerator : MonoBehaviour
     internal Tilemap Tilemap = null;
     private GameObject ExitChunk;
     private GameObject BunkerChunk;
-    private GameObject BossArenaChunk;
     public LevelPattern pattern = LevelPattern.Random;
+    public bool RegenerateLevel = false;
 
     void Awake()
     {
         Instance = this;
         randomChunks = new List<GameObject>(Resources.LoadAll<GameObject>("RandomChunks"));
         fixedChunks = new List<GameObject>(Resources.LoadAll<GameObject>("FixedChunks"));
-        BossArenaChunk = fixedChunks.Find(x => x.name == "BossArenaChunk");
         BunkerChunk = fixedChunks.Find(x => x.name == "BunkerChunk");
         ExitChunk = fixedChunks.Find(x => x.name == "ExitChunk");
     }
@@ -37,35 +34,23 @@ public class LevelGenerator : MonoBehaviour
         Generate();
     }
 
-    void Generate()
+    public void Generate()
     {
         InstantiatedChunks = new Dictionary<Vector2Int, Chunk>();
-        int maxLevels = 3;
+        foreach (Transform child in transform)
+            Destroy(child.gameObject);
         if (Tilemap != null)
         {
-            Tilemap.ClearAllTiles();
+            //Tilemap.ClearAllTiles();
         }
         else
         {
             Tilemap = GetComponent<Tilemap>();
         }
-        for (int levelCount = 1; levelCount <= maxLevels; levelCount++)
-        {
-            GenerateLevel(levelCount);
-        }
-        Vector2Int gridPos = new Vector2Int(0, 1);
-        int finalLevel = maxLevels + 1;
-        Vector2Int worldGridPos = GetChunkPos(gridPos.x, gridPos.y, finalLevel);
-        Vector2Int gridChunkSize = new Vector2Int(ChunkWidth, ChunkHeight);
-        Vector3 pos = new Vector3(worldGridPos.x * gridChunkSize.x, -worldGridPos.y * gridChunkSize.y, 0);
-        GameObject obj = Instantiate(BossArenaChunk, pos, Quaternion.identity, transform);
-        Chunk chunk = obj.GetComponent<Chunk>();
-        TileBase[] tiles = new TileBase[ChunkWidth * ChunkHeight];
-        Vector3Int[] positions = new Vector3Int[ChunkWidth * ChunkHeight];
-
-        CopyChunkToTilemap(gridPos, finalLevel, tiles, positions, obj, chunk);
+        BuildLevel(1);
     }
-    void GenerateLevel(int level)
+
+    void BuildLevel(int level)
     {
         TileBase[] tiles = new TileBase[ChunkWidth * ChunkHeight];
         Vector3Int[] positions = new Vector3Int[ChunkWidth * ChunkHeight];
@@ -134,6 +119,16 @@ public class LevelGenerator : MonoBehaviour
             }
         }
     }
+    private void OnValidate()
+    {
+        if (RegenerateLevel)
+        {
+            RegenerateLevel = false;
+            Debug.Log("sTARG");
+            Generate();
+            Debug.Log("Endu");
+        }
+    }
 
     public Vector2Int GetChunkPos(int x, int y, int level)
     {
@@ -142,21 +137,32 @@ public class LevelGenerator : MonoBehaviour
 
     private bool ShouldSpawnSpecialChunk(Vector2Int gridPos, Vector2Int gridChunkSize, int level, TileBase[] tiles, Vector3Int[] positions)
     {
-        if (gridPos.x == NumChunksWide - 1 && gridPos.y == 0)
+        void SpawnSpeciaChunk(GameObject chunkToSpawn)
         {
             Vector2Int worldGridPos = GetChunkPos(gridPos.x, gridPos.y, level);
             Vector3 pos = new Vector3(worldGridPos.x * gridChunkSize.x, -worldGridPos.y * gridChunkSize.y, 0);
-            GameObject obj = Instantiate(ExitChunk, pos, Quaternion.identity, transform);
+            GameObject obj = Instantiate(chunkToSpawn, pos, Quaternion.identity, transform);
             Chunk chunk = obj.GetComponent<Chunk>();
             CopyChunkToTilemap(gridPos, level, tiles, positions, obj, chunk);
+        }
+        if (gridPos.x == NumChunksWide - 1 && gridPos.y == 0)
+        {
+            SpawnSpeciaChunk(ExitChunk);
+            return true;
+        }
+        if (BunkerChunk != null && gridPos.x == 0 && gridPos.y == 0)
+        {
+            SpawnSpeciaChunk(BunkerChunk);
             return true;
         }
         return false;
     }
+
     public void SetTile(int chunkX, int chunkY, int tileX, int tileY, TileBase tile)
     {
         Tilemap.SetTile(new Vector3Int(chunkX * ChunkWidth + tileX, -chunkY * ChunkHeight + tileY), tile);
     }
+
     public void SetTile(Chunk chunk, int tileX, int tileY, TileBase tile)
     {
         Vector2Int pos = GetChunkPos(chunk.X, chunk.Y, chunk.Level);
