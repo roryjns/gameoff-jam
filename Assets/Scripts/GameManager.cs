@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] PlayerController playerController;
     [SerializeField] TextMeshProUGUI orbText, deathText;
     [SerializeField] GameObject gameOverFirst;
+    [SerializeField] Vector3 spawnPos;
 
     private void Awake()
     {
@@ -52,9 +53,13 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator LoadNextLevel()
     {
+        playerController.enabled = false;
         yield return FadeCanvas(blankCanvas, 1f, 1f);
-        ObjectPooler.Instance.ClearAllPools();
-        StartCoroutine(LoadScene(SceneManager.GetActiveScene().buildIndex + 1));
+        playerController.gameObject.transform.position = spawnPos;
+        LevelGenerator.Instance.Generate();
+        yield return new WaitForSeconds(1f);
+        playerController.enabled = true;
+        yield return FadeCanvas(blankCanvas, 0f, 1f);
     }
 
     public void RestartRun()

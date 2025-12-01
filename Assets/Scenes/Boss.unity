@@ -303,6 +303,7 @@ MonoBehaviour:
   orbText: {fileID: 2570764419374757036}
   deathText: {fileID: 867393901}
   gameOverFirst: {fileID: 1263802063}
+  spawnPos: {x: 0, y: 0, z: 0}
 --- !u!4 &351625823
 Transform:
   m_ObjectHideFlags: 0

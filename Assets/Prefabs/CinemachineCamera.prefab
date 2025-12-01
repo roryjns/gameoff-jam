@@ -1633,7 +1633,7 @@ MonoBehaviour:
   foregroundWave: {fileID: 3316120675531308158}
   player: {fileID: 0}
   interactableWater: {fileID: 0}
-  interactableRiseHeight: 3
+  interactableRiseHeight: -4
 --- !u!114 &2567628218133880445
 MonoBehaviour:
   m_ObjectHideFlags: 0

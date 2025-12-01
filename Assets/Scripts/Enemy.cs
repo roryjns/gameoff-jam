@@ -153,6 +153,7 @@ public class Enemy : MonoBehaviour
         targetX = transform.position.x + direction * moveSpeed * Time.fixedDeltaTime;
         if (direction > 0 && !facingRight) Flip();
         else if (direction < 0 && facingRight) Flip();
+        Debug.Log(IsAboutToFall(targetX));
         if (IsAboutToFall(targetX)) return false;
         targetPos = new(targetX, rb.position.y);
         rb.MovePosition(targetPos);

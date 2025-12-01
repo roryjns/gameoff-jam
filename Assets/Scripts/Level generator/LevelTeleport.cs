@@ -6,7 +6,7 @@ public class LevelTeleport : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            collision.gameObject.transform.position += Vector3.up * LevelGenerator.Instance.ChunkHeight * 3; 
+            GameManager.Instance.EnterNextLevel();
         }
     }
 }
