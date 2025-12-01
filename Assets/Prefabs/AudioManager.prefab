@@ -302,7 +302,7 @@ MonoBehaviour:
   - type: 12
     clip: {fileID: 8300000, guid: a95d247520f5ad0468461703a74a0f21, type: 3}
     clips: []
-    defaultVolume: 1
+    defaultVolume: 0.613
   - type: 13
     clip: {fileID: 8300000, guid: f07a29995b61b3947bb9a1ebc97452c4, type: 3}
     clips: []
