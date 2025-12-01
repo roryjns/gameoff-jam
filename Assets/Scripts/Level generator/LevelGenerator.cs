@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 public class LevelGenerator : MonoBehaviour
@@ -31,6 +30,7 @@ public class LevelGenerator : MonoBehaviour
 
     void Start()
     {
+        UnityEngine.Random.InitState((int)System.DateTime.Now.Ticks);
         Generate();
     }
 
@@ -125,9 +125,7 @@ public class LevelGenerator : MonoBehaviour
         if (RegenerateLevel)
         {
             RegenerateLevel = false;
-            Debug.Log("sTARG");
             Generate();
-            Debug.Log("Endu");
         }
     }
 
@@ -211,7 +209,7 @@ public class LevelGenerator : MonoBehaviour
     private GameObject SpawnChunk(Vector2Int gridPos, Vector2Int gridChunkSize, int level, TileBase[] tiles, Vector3Int[] positions, ChunkType? chunkType)
     {
         if (randomChunks.Count == 0) return null;
-        int index = Random.Range(0, randomChunks.Count);
+        int index = UnityEngine.Random.Range(0, randomChunks.Count);
         var toInstantiate = randomChunks[index];
         if (toInstantiate == null) return null;
 
