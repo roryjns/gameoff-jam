@@ -6,8 +6,9 @@ using UnityEngine.Audio;
 public class AudioManager : MonoBehaviour
 {
     [SerializeField] List<SoundEntry> sounds;
-    [SerializeField] AudioSource sfxSource;
+    [SerializeField] AudioSource musicSource, sfxSource;
     [SerializeField] AudioMixer mixer;
+    [SerializeField] AudioClip[] levelMusic;
 
     public static AudioManager Instance { get; private set; }
     Dictionary<SoundType, SoundEntry> soundMap;
@@ -171,5 +172,12 @@ public class AudioManager : MonoBehaviour
         }
 
         mixer.SetFloat(mixerParam, targetVolume);
+    }
+
+    public void LevelComplete(int levelNumber)
+    {
+        musicSource.Stop();
+        musicSource.clip = levelMusic[levelNumber - 1];
+        musicSource.Play();
     }
 }

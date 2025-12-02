@@ -223,6 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b3a8f67266c89944af79a1a2ea03c1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  levelNumber: 1
   runData:
     currentHealth: 0
     orbCount: 0
@@ -1073,49 +1074,7 @@ CompositeCollider2D:
   m_GeometryType: 0
   m_GenerationType: 0
   m_EdgeRadius: 0
-  m_ColliderPaths:
-  - m_Collider: {fileID: 1215574721}
-    m_ColliderPaths:
-    - - X: -10000000
-        Y: -70000000
-      - X: -20000000
-        Y: -70000000
-      - X: -20000000
-        Y: -80000000
-      - X: -10000000
-        Y: -80000000
-    - - X: 180000000
-        Y: -70000000
-      - X: 170000000
-        Y: -70000000
-      - X: 170000000
-        Y: -90000000
-      - X: 180000000
-        Y: -90000000
-    - - X: 160000000
-        Y: -70000000
-      - X: 140000000
-        Y: -70000000
-      - X: 140000000
-        Y: -80000000
-      - X: 160000000
-        Y: -80000000
-    - - X: 20000000
-        Y: -80000000
-      - X: 10000000
-        Y: -80000000
-      - X: 10000000
-        Y: -90000000
-      - X: 20000000
-        Y: -90000000
-    - - X: 60000000
-        Y: -80000000
-      - X: 40000000
-        Y: -80000000
-      - X: 40000000
-        Y: -90000000
-      - X: 60000000
-        Y: -90000000
+  m_ColliderPaths: []
   m_CompositePaths:
     m_Paths:
     - - {x: 17.999971, y: -9}
@@ -1448,7 +1407,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!156049354 &1704825572
 Grid:
   m_ObjectHideFlags: 0
@@ -1834,6 +1793,10 @@ PrefabInstance:
     - target: {fileID: 4542521878873185461, guid: 3283a1a3981bfa446a36c1fe2f58c595, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761171069407445575, guid: 3283a1a3981bfa446a36c1fe2f58c595, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 4824866544979389791, guid: 3283a1a3981bfa446a36c1fe2f58c595, type: 3}
       propertyPath: m_AnchorMax.y

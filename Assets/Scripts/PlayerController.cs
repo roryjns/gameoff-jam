@@ -95,12 +95,16 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        if (GameManager.Instance.runData.currentHealth > 0) 
+            currentHealth = GameManager.Instance.runData.currentHealth;
+        else
+            GameManager.Instance.runData.currentHealth = currentHealth;
+
         rb = gameObject.GetComponent<Rigidbody2D>();
         anim = gameObject.GetComponent<Animator>();
         healthBar.Initialise(maxHealth);
         healthBar.UpdateHealth(currentHealth);
         flash = GetComponent<Flash>();
-        GameManager.Instance.runData.currentHealth = currentHealth;
     }
 
     private void FixedUpdate()
@@ -360,6 +364,7 @@ public class PlayerController : MonoBehaviour
         currentHealth -= damage;
         flash.DamageFlash();
         healthBar.UpdateHealth(currentHealth);
+        GameManager.Instance.runData.currentHealth = currentHealth;
         if (currentHealth <= 0)
         {
             rb.linearVelocityX = 0;

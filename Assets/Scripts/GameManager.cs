@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     public event EventHandler<Enemy> OnEnemyDeath;
+    [SerializeField] int levelNumber = 1;
 
     [Serializable]
     public class RunData // Data that is lost upon closing the game or dying
@@ -54,12 +55,24 @@ public class GameManager : MonoBehaviour
     private IEnumerator LoadNextLevel()
     {
         playerController.enabled = false;
-        yield return FadeCanvas(blankCanvas, 1f, 1f);
-        playerController.gameObject.transform.position = spawnPos;
-        LevelGenerator.Instance.Generate();
-        yield return new WaitForSeconds(1f);
-        playerController.enabled = true;
-        yield return FadeCanvas(blankCanvas, 0f, 1f);
+        StartCoroutine(AudioManager.Instance.FadeTo("MusicVolume", -80f, 1f));
+        levelNumber++;
+
+        if (levelNumber <= 3)
+        {
+            yield return FadeCanvas(blankCanvas, 1f, 1f);
+            playerController.gameObject.transform.position = spawnPos;
+            LevelGenerator.Instance.Generate();
+            yield return new WaitForSeconds(1f);
+            AudioManager.Instance.LevelComplete(levelNumber);
+            playerController.enabled = true;
+            StartCoroutine(AudioManager.Instance.FadeTo("MusicVolume", 0f, 1f));
+            yield return FadeCanvas(blankCanvas, 0f, 1f);
+        }
+        else // Level 3 completed, load boss fight
+        {
+            StartCoroutine(LoadScene(2));
+        }
     }
 
     public void RestartRun()
@@ -92,7 +105,8 @@ public class GameManager : MonoBehaviour
     public IEnumerator BossDefeated()
     {
         StartCoroutine(AudioManager.Instance.FadeTo("MusicVolume", -80f, 3f));
-        yield return null;
+        yield return FadeCanvas(blankCanvas, 1f, 3f);
+        ExitToMenu();
     }
 
     private IEnumerator FadeCanvas(CanvasGroup canvas, float targetAlpha, float duration)

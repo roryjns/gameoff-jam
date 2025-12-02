@@ -327,5 +327,10 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: eabf57c84414dc141a3e2c5513ef6fed, type: 3}
     clips: []
     defaultVolume: 1
+  musicSource: {fileID: 3233248916227443373}
   sfxSource: {fileID: 2954744814264344927}
   mixer: {fileID: 24100000, guid: 3bc77082183d0d14597036f50d7e9f5c, type: 2}
+  levelMusic:
+  - {fileID: 8300000, guid: e5953f9529daa3341b2ae251edca90f6, type: 3}
+  - {fileID: 8300000, guid: b9195ecd8db524f4894bb5eede41b526, type: 3}
+  - {fileID: 8300000, guid: 7d174aab45fa81649b7939f686a91d85, type: 3}

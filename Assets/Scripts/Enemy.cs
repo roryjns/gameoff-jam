@@ -42,7 +42,7 @@ public class Enemy : MonoBehaviour
     [HideInInspector] public bool underwater;
     Rigidbody2D rb;
     Animator anim;
-    Transform player;
+    public Transform player;
     AudioSource idleAudioSource;
     Collider2D coll;
 
@@ -244,9 +244,13 @@ public class Enemy : MonoBehaviour
 
     private void SelectAttack()
     {
-        if (idleAudioSource) idleAudioSource.Stop();
-        currentAttack = attacks[Random.Range(0, attacks.Length)];
-        StartCoroutine(Attack());
+        if (currentHealth > 0)
+        {
+            if (idleAudioSource) idleAudioSource.Stop();
+            currentAttack = attacks[Random.Range(0, attacks.Length)];
+            StartCoroutine(Attack());
+        }
+
     }
 
     private IEnumerator Attack()
